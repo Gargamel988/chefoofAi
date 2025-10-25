@@ -1,0 +1,12 @@
+{
+	"entry": [
+	  "app/**/*.{ts,tsx}",
+	  "components/**/*.{ts,tsx}"
+	],
+	"project": ["**/*.{ts,tsx,js,jsx}"],
+	"ignoreDependencies": [
+	  "tailwindcss",
+	  "tw-animate-css"
+	],
+	"ignoreExportsUsedInFile": true
+  }

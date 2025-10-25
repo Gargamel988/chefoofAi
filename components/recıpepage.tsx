@@ -5,11 +5,15 @@ import { Sparkles, ChefHat, Utensils, Star, Heart } from "lucide-react";
 import { useState } from "react";
 import FovariteModal from "./fovarite-modal";
 import { FavoriteRecipe } from "@/type/recipetype";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { useStorage } from "@/hooks/usestorage";
 
 export default function RecipePage() {
   const [dish, setDish] = useState("");
   const [isStarred, setIsStarred] = useState(false);
   const [open, setOpen] = useState(false);
+  const { saveFavorites } = useStorage();
   const { submit, object, isLoading, error } = useObject({
     schema: streamObjectSchema,
     api: "/api/chat",
@@ -18,43 +22,19 @@ export default function RecipePage() {
   const submitDish = () => {
     if (!dish.trim() || !submit) return;
     submit({ dish });
-	setIsStarred(false);
+    setIsStarred(false);
     setDish("");
   };
 
   const handlesubmit = () => {
-	if (!object) return;
-
-	const initialIsStarred = isStarred;
-	try {
-	  // 1. Önce mevcut favorileri al
-	  const existingFavorites = localStorage.getItem("favorites");
-	  const favorites = existingFavorites ? JSON.parse(existingFavorites) : [];
-	  
-	  // 2. Bu tarif zaten var mı kontrol et
-	  const alreadyExists = favorites.some((fav: FavoriteRecipe) => fav.title === object.title);
-	  
-	  if (alreadyExists) {
-		alert("Bu tarif zaten favorilerde!");
-		setIsStarred(true);
-		return;
-	  }
-	  
-	  // 3. Yeni tarifi ekle
-	  favorites.push(object);
-	  
-	  // 4. Güncel listeyi kaydet
-	  localStorage.setItem("favorites", JSON.stringify(favorites));
-	  setIsStarred(!initialIsStarred);
-	} catch (error) {
-	  console.error("Error saving favorite:", error);
-	} 
+    if (!object) return;
+    saveFavorites.mutate(object as FavoriteRecipe);
+    setIsStarred(true);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
       {/* Background overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/30 pointer-events-none"></div>
 
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-4xl mx-auto">
@@ -65,7 +45,7 @@ export default function RecipePage() {
               <ChefHat className="w-8 h-8 text-orange-400" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-300 bg-clip-text text-transparent">
-              ChefFood AI
+              CheFood AI
             </h1>
           </div>
           <p className="text-lg text-slate-300/80 max-w-2xl mx-auto leading-relaxed">
@@ -76,16 +56,15 @@ export default function RecipePage() {
         </div>
 
         {/* Input section with glassmorphism */}
-        <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-1">
-              <label
-                htmlFor="dish"
-                className=" text-lg font-semibold text-white/90 mb-4 flex items-center gap-2"
-              >
-                <Utensils className="w-5 h-5 text-orange-400" />
-                Ne pişirmek istersiniz?
-              </label>
+        <Card className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <CardContent className="flex flex-col md:flex-row gap-6 p-0">
+            <div className="flex-1 p-0">
+              <CardHeader className="p-0 flex-1">
+                <CardTitle className=" text-lg font-semibold text-white/90 mb-4 flex items-center gap-2">
+                  <Utensils className="w-5 h-5 text-orange-400" />
+                  Ne pişirmek istersiniz?
+                </CardTitle>
+              </CardHeader>
               <input
                 id="dish"
                 type="text"
@@ -102,16 +81,15 @@ export default function RecipePage() {
               />
             </div>
             <div className="flex items-end">
-              <button
+              <Button
                 onClick={(e) => {
                   e.preventDefault();
                   submitDish();
                 }}
                 disabled={isLoading || !submit}
-                className="group relative px-8 py-5 rounded-2xl font-bold text-white text-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 whitespace-nowrap bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-400 hover:to-pink-400 border border-orange-400/30"
+                className="w-full cursor-pointer px-8 py-9 hover:shadow-2xl bg-gradient-to-r from-black via-orange-900 to-orange-500 hover:from-zinc-900 hover:via-orange-800 hover:to-orange-400 border border-orange-400/30 text-white font-bold rounded-2xl transition-all duration-300 hover:shadow-orange-500/30 disabled:opacity-50"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <span className="relative flex items-center gap-2">
+                <span className="relative flex items-center gap-2 text-lg">
                   {isLoading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -124,10 +102,10 @@ export default function RecipePage() {
                     </>
                   )}
                 </span>
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Recipe Results Section */}
         {object && (
@@ -167,11 +145,15 @@ export default function RecipePage() {
                   </div>
                 </div>
                 <button
-				  disabled={isLoading}
+                  disabled={isLoading}
                   onClick={handlesubmit}
                   className=" bg-white/5 cursor-pointer border border-white/10 rounded-3xl p-2 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isStarred ? <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" /> : <Star className="w-6 h-6 text-white" />}
+                  {isStarred ? (
+                    <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
+                  ) : (
+                    <Star className="w-6 h-6 text-white" />
+                  )}
                 </button>
               </div>
               {/* Time Details */}
@@ -414,16 +396,16 @@ export default function RecipePage() {
           </div>
         )}
       </div>
-      
+
       {/* Favori butonu - sol alt köşe */}
-      <button
+      <Button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 left-6 p-4 rounded-full bg-gradient-to-b from-pink-500/20 to-red-500/20 backdrop-blur-sm border border-white/10 hover:bg-pink-500/30 transition-all duration-300 group shadow-lg z-50"
+        className=" fixed bottom-6 left-6 size-16 bg-gradient-to-b from-orange-500/20 to-black/20 cursor-pointer rounded-full backdrop-blur-sm border border-orange-400/30 hover:bg-orange-500/30 transition-all duration-300 group shadow-lg z-50"
         title="Favori Tarifler"
       >
-        <Heart className="w-6 h-6 text-pink-400 group-hover:text-pink-300 transition-colors" />
-      </button>
-      
+        <Heart className=" size-6 text-orange-400 group-hover:text-orange-300 transition-colors" />
+      </Button>
+
       <FovariteModal open={open} onOpenChange={setOpen} />
     </div>
   );
