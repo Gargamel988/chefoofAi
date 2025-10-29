@@ -1,0 +1,30 @@
+## Running the Project with Docker
+
+This project provides a Docker setup for running the Next.js/TypeScript application in a production-ready environment. The Docker configuration uses multi-stage builds for optimized image size and security.
+
+### Requirements
+- Docker (latest version recommended)
+- Docker Compose (if using `compose.yaml`)
+
+### Project-Specific Docker Details
+- **Node.js Version:** 22.13.1 (as specified in the Dockerfile)
+- **Exposed Port:** 3000 (the app will be available at `http://localhost:3000`)
+- **Environment Variables:**
+  - The Docker Compose file references an optional `.env.local` file for environment variables. Uncomment the `env_file` line in `compose.yaml` if you need to provide custom configuration.
+
+### Build and Run Instructions
+1. **Build and start the app:**
+   ```sh
+   docker compose up --build
+   ```
+   This will build the Docker image using the provided `Dockerfile` and start the application on port 3000.
+
+2. **Access the app:**
+   Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
+
+### Customization
+- If you need to provide environment variables, create a `.env.local` file in the project root and uncomment the `env_file` line in `compose.yaml`.
+- The Docker setup uses a non-root user for improved security.
+- No external services (such as databases) are configured by default. If you add any, update `compose.yaml` accordingly.
+
+---

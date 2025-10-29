@@ -2,18 +2,30 @@
 import { streamObjectSchema } from "@/app/scheme/stream-object-schemes";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
 import { Sparkles, ChefHat, Utensils, Star, Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FovariteModal from "./fovarite-modal";
 import { FavoriteRecipe } from "@/type/recipetype";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { useStorage } from "@/hooks/usestorage";
+import DarkVeil from "./DarkVeil";
+import Loading from "@/app/loading";
 
 export default function RecipePage() {
   const [dish, setDish] = useState("");
   const [isStarred, setIsStarred] = useState(false);
   const [open, setOpen] = useState(false);
   const { saveFavorites } = useStorage();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    
+    const timeout = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   const { submit, object, isLoading, error } = useObject({
     schema: streamObjectSchema,
     api: "/api/chat",
@@ -31,11 +43,14 @@ export default function RecipePage() {
     saveFavorites.mutate(object as FavoriteRecipe);
     setIsStarred(true);
   };
+  if (!mounted) return <Loading />;
 
-  return (
+  return  (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
       {/* Background overlay for better text readability */}
-
+      <div className="fixed inset-0">
+        <DarkVeil hueShift={210} speed={2} />
+      </div>
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-4xl mx-auto">
         {/* Header section */}
@@ -395,6 +410,7 @@ export default function RecipePage() {
             </div>
           </div>
         )}
+        
       </div>
 
       {/* Favori butonu - sol alt köşe */}

@@ -102,6 +102,7 @@ export default function DarkVeil({
       dpr: Math.min(window.devicePixelRatio, 2),
       canvas
     });
+    
 
     const gl = renderer.gl;
     const geometry = new Triangle(gl);
