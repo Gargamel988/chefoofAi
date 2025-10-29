@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     "yemek nasıl hazırlanır",
     "yemek nasıl pişirilir",
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL as string),
   openGraph: {
     type: "website",
     locale: "tr_TR",

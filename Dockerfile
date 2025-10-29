@@ -4,6 +4,9 @@ FROM node:20-alpine AS builder
 # 2. Çalışma dizini oluştur
 WORKDIR /app
 
+# 3. Standalone modülü kopyala
+COPY .next/standalone/server.js ./server.js
+
 # 3. Paketleri yükle
 COPY package*.json ./
 RUN npm install
