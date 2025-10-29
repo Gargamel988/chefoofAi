@@ -1,32 +1,32 @@
-# syntax=docker/dockerfile:1
+# 1. Node versiyonunu belirt
+FROM node:20-alpine AS builder
 
-ARG NODE_VERSION=22.15.0
+# 2. Çalışma dizini oluştur
+WORKDIR /app
 
-FROM node:${NODE_VERSION}-alpine
+# 3. Paketleri yükle
+COPY package*.json ./
+RUN npm install
 
-# Use production node environment by default.
-ENV NODE_ENV production
-
-WORKDIR /usr/src/app
-
-# Install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
-
-# Install TypeScript
-RUN npm install --save-exact --save-dev typescript
-
-# Fix permissions
-RUN chown -R node:node /usr/src/app
-
-# Switch to non-root user
-USER node
-
-# Copy source files
+# 4. Kodları kopyala
 COPY . .
 
-# Expose the port
-EXPOSE 3000
+# 5. Build al
+RUN npm run build
 
-# Run the application
-CMD ["npm", "run", "start"]
+# 6. Production image
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Sadece gerekli dosyaları al
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
+
+# Uygulamayı başlat
+CMD ["npm", "start"]
+
+EXPOSE 3000
