@@ -9,6 +9,6 @@ export default function Robots(): MetadataRoute.Robots {
         disallow: "/api/",
       },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_BASE_URL}/sitemap.xml`,
+    sitemap: `https://chefoodai.vercel.app/sitemap.xml`,
   };
 }
