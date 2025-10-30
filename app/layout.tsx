@@ -25,7 +25,6 @@ export const metadata: Metadata = {
     "yemek nasıl hazırlanır",
     "yemek nasıl pişirilir",
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL as string),
   verification: {
     google: 'ZthQntL_bdSYhNe74uXr_tQKIEr4K-gQwem01txYEPs',
   },
