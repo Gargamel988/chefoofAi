@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     default: "CheFood AI",
     template: "CheFood AI | %s",
   },
+  metadataBase: new URL("https://chefoodai.vercel.app"),
   description:"Yapay zeka destekli tarif platformunda, hızlı ve lezzetli yemek tarifleri keşfedin. En güncel ve pratik tarifler, tek sayfada size özel",
   keywords: [
     "yapay zeka",
