@@ -1,14 +1,6 @@
 "use client";
 import { useState } from "react";
-import {
-  Star,
-  Trash2,
-  ChefHat,
-  Clock,
-  Users,
-  Utensils,
-  X,
-} from "lucide-react";
+import Icon from "@/components/Icon";
 import {
   Dialog,
   DialogClose,
@@ -19,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useStorage } from "@/hooks/usestorage";
-import Image from "next/image";
 
 interface modalProps {
   open: boolean;
@@ -54,7 +45,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
       <DialogContent className="fixed left-[30%] md:left-[25%] xl:left-[18%] 2xl:left-[10%]  w-60 md:w-1/2 h-full border-r border-white/10 bg-black backdrop-blur-sm overflow-y-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-300 scrollbar-hide">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-row items-center gap-2">
-            <Star className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-yellow-400" />
+            <Icon name="Star" className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-yellow-400" />
             Favori Tarifler
           </DialogTitle>
           <DialogDescription className="text-xs sm:text-sm lg:text-base text-slate-300 text-left">
@@ -62,14 +53,14 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
             yönetebilirsiniz.
           </DialogDescription>
           <DialogClose>
-            <X className="w-4 h-4 text-white absolute top-4 right-4" />
+            <Icon name="X" className="w-4 h-4 text-white absolute top-4 right-4" />
           </DialogClose>
         </DialogHeader>
 
         {favorites?.length === 0 ? (
           <div className="text-center py-8 sm:py-12">
             <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <Star className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-slate-400" />
+              <Icon name="Star" className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-slate-400" />
             </div>
             <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-white mb-2">
               Henüz favori tarif yok
@@ -90,7 +81,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
                 size="sm"
                 className="text-xs sm:text-sm lg:text-base text-orange-400 cursor-pointer bg-black/70 border-orange-400/30 hover:bg-orange-400/10 hover:text-white"
               >
-                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                <Icon name="Trash2" className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 Tümünü Temizle
               </Button>
             </div>
@@ -117,13 +108,13 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
                           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm lg:text-base"> 
                             {recipe.servings && (
                               <span className="px-2 py-1 bg-orange-500/20 rounded-full border border-orange-400/30 text-orange-300 whitespace-nowrap">
-                                <Users className="w-3 h-3 inline mr-1" />
+                                <Icon name="Users" className="w-3 h-3 inline mr-1" />
                                 {recipe.servings} kişilik
                               </span>
                             )}
                             {recipe.times?.totalMinutes && (
                               <span className="px-2 py-1 bg-pink-500/20 rounded-full border border-pink-400/30 text-pink-300 whitespace-nowrap">
-                                <Clock className="w-3 h-3 inline mr-1" />
+                                <Icon name="Clock" className="w-3 h-3 inline mr-1" />
                                 {recipe.times.totalMinutes} dk
                               </span>
                             )}
@@ -153,7 +144,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
                             size="sm"
                             className="text-orange-400 cursor-pointer bg-black/70 border-orange-400/30 hover:bg-orange-400/10 hover:text-white p-1.5 sm:p-2"
                           >
-                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <Icon name="Trash2" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </Button>
                           <div className="text-white/60 text-sm sm:text-base">
                             {isExpanded ? "▲" : "▼"}
@@ -201,7 +192,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
                         {recipe.ingredients && recipe.ingredients.length > 0 && (
                           <div className="mb-3 sm:mb-4">
                             <h4 className="text-xs sm:text-sm font-semibold text-white mb-2 flex items-center gap-1">
-                              <Utensils className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" />
+                              <Icon name="Utensils" className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" />
                               Malzemeler ({recipe.ingredients.length})
                             </h4>
                             <div className="flex flex-wrap gap-1 sm:gap-1.5">
@@ -223,7 +214,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
                         {recipe.steps && recipe.steps.length > 0 && (
                           <div>
                             <h4 className="text-xs sm:text-sm font-semibold text-white mb-2 flex items-center gap-1">
-                              <ChefHat className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" />
+                              <Icon name="ChefHat" className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400" />
                               Yapım Aşamaları ({recipe.steps.length})
                             </h4>
                             <div className="space-y-1 flex flex-col gap-1 bg-white/5 p-2 sm:p-3 rounded-xl">

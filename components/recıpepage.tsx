@@ -1,7 +1,6 @@
 "use client";
 import { streamObjectSchema } from "@/app/scheme/stream-object-schemes";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
-import { Sparkles, ChefHat, Utensils, Star, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import FovariteModal from "./fovarite-modal";
 import { FavoriteRecipe } from "@/type/recipetype";
@@ -10,6 +9,7 @@ import { Button } from "./ui/button";
 import { useStorage } from "@/hooks/usestorage";
 import DarkVeil from "./DarkVeil";
 import Loading from "@/app/loading";
+import Icon from "@/components/Icon";
 
 export default function RecipePage() {
   const [dish, setDish] = useState("");
@@ -57,7 +57,7 @@ export default function RecipePage() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="p-3 rounded-full bg-gradient-to-b from-orange-500/20 to-pink-500/20 backdrop-blur-sm border border-white/10">
-              <ChefHat className="w-8 h-8 text-orange-400" />
+              <Icon name="ChefHat" className="w-8 h-8 text-orange-400" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-300 bg-clip-text text-transparent">
               CheFood AI
@@ -76,7 +76,7 @@ export default function RecipePage() {
             <div className="flex-1 p-0">
               <CardHeader className="p-0 flex-1">
                 <CardTitle className=" text-lg font-semibold text-white/90 mb-4 flex items-center gap-2">
-                  <Utensils className="w-5 h-5 text-orange-400" />
+                  <Icon name="Utensils" className="w-5 h-5 text-orange-400" />
                   Ne pişirmek istersiniz?
                 </CardTitle>
               </CardHeader>
@@ -112,7 +112,7 @@ export default function RecipePage() {
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-5 h-5" />
+                      <Icon name="Sparkles" className="w-5 h-5" />
                       Tarif Oluştur
                     </>
                   )}
@@ -165,9 +165,9 @@ export default function RecipePage() {
                   className=" bg-white/5 cursor-pointer border border-white/10 rounded-3xl p-2 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isStarred ? (
-                    <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
+                    <Icon name="Star" className="w-6 h-6 text-yellow-400 fill-yellow-400" />
                   ) : (
-                    <Star className="w-6 h-6 text-white" />
+                    <Icon name="Star" className="w-6 h-6 text-white" />
                   )}
                 </button>
               </div>
@@ -207,7 +207,7 @@ export default function RecipePage() {
               {object.ingredients && object.ingredients.length > 0 && (
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                    <Utensils className="w-6 h-6 text-orange-400" />
+                    <Icon name="Utensils" className="w-6 h-6 text-orange-400" />
                     Malzemeler
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -237,7 +237,7 @@ export default function RecipePage() {
               {object.steps && object.steps.length > 0 && (
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                    <ChefHat className="w-6 h-6 text-orange-400" />
+                    <Icon name="ChefHat" className="w-6 h-6 text-orange-400" />
                     Yapım Aşamaları
                   </h3>
                   <div className="space-y-4">
@@ -269,7 +269,7 @@ export default function RecipePage() {
               {object.nutrition && (
                 <div className="mb-8">
                   <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                    <Sparkles className="w-6 h-6 text-orange-400" />
+                    <Icon name="Sparkles" className="w-6 h-6 text-orange-400" />
                     Besin Değerleri
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -375,7 +375,7 @@ export default function RecipePage() {
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:bg-white/10 transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ChefHat className="w-6 h-6 text-orange-400" />
+                <Icon name="ChefHat" className="w-6 h-6 text-orange-400" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 Uzman Tarifler
@@ -387,7 +387,7 @@ export default function RecipePage() {
 
             <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:bg-white/10 transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Utensils className="w-6 h-6 text-orange-400" />
+                <Icon name="Utensils" className="w-6 h-6 text-orange-400" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 Adım Adım Rehber
@@ -399,7 +399,7 @@ export default function RecipePage() {
 
             <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:bg-white/10 transition-all duration-300">
               <div className="w-12 h-12 bg-gradient-to-r from-orange-500/20 to-pink-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-6 h-6 text-orange-400" />
+                <Icon name="Sparkles" className="w-6 h-6 text-orange-400" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">
                 Kişiselleştirilmiş
@@ -419,7 +419,7 @@ export default function RecipePage() {
         className=" fixed bottom-6 left-6 size-16 bg-gradient-to-b from-orange-500/20 to-black/20 cursor-pointer rounded-full backdrop-blur-sm border border-orange-400/30 hover:bg-orange-500/30 transition-all duration-300 group shadow-lg z-50"
         title="Favori Tarifler"
       >
-        <Heart className=" size-6 text-orange-400 group-hover:text-orange-300 transition-colors" />
+        <Icon name="Heart" className=" size-6 text-orange-400 group-hover:text-orange-300 transition-colors" />
       </Button>
 
       <FovariteModal open={open} onOpenChange={setOpen} />

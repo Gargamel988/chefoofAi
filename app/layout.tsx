@@ -3,9 +3,12 @@ import "./globals.css";
 import Queryclientprovider from "./queryClient";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const interFont = Inter({
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -134,6 +137,7 @@ export default function RootLayout({
       <body className={`${interFont.className} flex flex-col min-h-screen`}>
         <Queryclientprovider>
           <Analytics />
+          <SpeedInsights />
           <main>{children}</main>
           <footer className="text-center text-sm text-gray-500 mt-auto z-10">
             <div className="flex items-center justify-center p-1 backdrop-blur-md border-t-2 border-t-white/10">

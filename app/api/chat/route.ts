@@ -2,6 +2,8 @@ import { streamObjectSchema } from '@/app/scheme/stream-object-schemes';
 import { google } from '@ai-sdk/google';
 import { streamObject } from 'ai';
 
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
   try {
     const { dish } = await request.json();
