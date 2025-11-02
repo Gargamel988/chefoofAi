@@ -34,70 +34,7 @@ const nextConfig: NextConfig = {
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      config.optimization.splitChunks = {
-        chunks: "all",
-        cacheGroups: {
-          default: false,
-          vendors: false,
 
-          framework: {
-            name: "framework",
-            chunks: "all",
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
-            priority: 40,
-            enforce: true,
-          },
-
-          ai: {
-            name: "ai-sdk",
-            chunks: "async",
-            test: /[\\/]node_modules[\\/](@ai-sdk|ai)[\\/]/,
-            priority: 30,
-          },
-
-          ui: {
-            name: "ui-libs",
-            chunks: "all",
-            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|class-variance-authority)[\\/]/,
-            priority: 25,
-          },
-
-          graphics: {
-            name: "graphics",
-            chunks: "async",
-            test: /[\\/]node_modules[\\/](ogl|three|@react-three)[\\/]/,
-            priority: 22,
-          },
-
-          query: {
-            name: "react-query",
-            chunks: "all",
-            test: /[\\/]node_modules[\\/](@tanstack)[\\/]/,
-            priority: 21,
-          },
-
-          vendor: {
-            name: "vendor",
-            chunks: "all",
-            test: /[\\/]node_modules[\\/]/,
-            priority: 20,
-          },
-
-          common: {
-            name: "common",
-            minChunks: 2,
-            chunks: "all",
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-        },
-      };
-    }
-
-    return config;
-  },
   async headers() {
     return [
       {
