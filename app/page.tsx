@@ -1,5 +1,11 @@
 import RecipePage from "@/components/recıpepage";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 export default function Home() {
-  return<RecipePage />
+  return (
+    <Suspense fallback={<Loading />}>
+      <RecipePage />
+    </Suspense>
+  );
 }

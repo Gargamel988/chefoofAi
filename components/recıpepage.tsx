@@ -1,7 +1,7 @@
 "use client";
 import { streamObjectSchema } from "@/app/scheme/stream-object-schemes";
 import { experimental_useObject as useObject } from "@ai-sdk/react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import FovariteModal from "./fovarite-modal";
 import { FavoriteRecipe } from "@/type/recipetype";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -11,14 +11,15 @@ import DarkVeil from "./DarkVeil";
 import Loading from "@/app/loading";
 import Icon from "@/components/Icon";
 
+
 export default function RecipePage() {
   const [dish, setDish] = useState("");
   const [isStarred, setIsStarred] = useState(false);
   const [open, setOpen] = useState(false);
-  const { saveFavorites } = useStorage();
   const [mounted, setMounted] = useState(false);
+  const { saveFavorites } = useStorage();
+
   useEffect(() => {
-    
     const timeout = setTimeout(() => {
       setMounted(true);
     }, 0);
@@ -43,14 +44,16 @@ export default function RecipePage() {
     saveFavorites.mutate(object as FavoriteRecipe);
     setIsStarred(true);
   };
-  if (!mounted) return <Loading />;
+  if (!mounted) return <Suspense fallback={<Loading />}> <Loading /> </Suspense>;
 
   return  (
-    <div className="min-h-screen flex items-center justify-center p-4 relative">
+    <div className="h-[100dvh] flex items-center justify-center p-4 relative">
       {/* Background overlay for better text readability */}
-      <div className="fixed inset-0">
-        <DarkVeil hueShift={210} speed={2} />
-      </div>
+      <Suspense fallback={<Loading />}>
+        <div className="fixed inset-0">
+          <DarkVeil hueShift={210} speed={2} />
+        </div>
+      </Suspense>
       {/* Main content container */}
       <div className="relative z-10 w-full max-w-4xl mx-auto">
         {/* Header section */}
