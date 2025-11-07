@@ -5,10 +5,13 @@ import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+// Font optimizasyonu - sadece gerekli ağırlıklar
 const interFont = Inter({
   subsets: ["latin"],
   display: "swap",
   preload: true,
+  weight: ["400", "500", "600", "700"], // Sadece kullandığın ağırlıklar
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -50,11 +53,11 @@ export const metadata: Metadata = {
     siteName: "CheFood AI",
     images: [
       {
-        url: "/fotochef.jpg",
+        url: "https://chefoodai.vercel.app/fotochef.webp", // Mutlak URL
         width: 1200,
         height: 630,
         alt: "CheFood AI - Yapay Zeka Yemek Tarifi Platformu",
-        type: "image/jpeg",
+        type: "image/webp",
       },
     ],
   },
@@ -63,7 +66,7 @@ export const metadata: Metadata = {
     title: "CheFood AI - Yapay Zeka Destekli Yemek Tarifleri",
     description:
       "Yapay zeka ile özel yemek tarifleri oluşturun. Malzemelerinizi girin, adım adım tarifler alın.",
-    images: ["/fotochef.jpg"],
+    images: ["https://chefoodai.vercel.app/fotochef.webp"], // Mutlak URL
     creator: "@omerAIdev",
   },
   robots: {
@@ -85,7 +88,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // --- JSON-LD Şemaları (Google için logo ve marka tanıma) ---
   const jsonLdApp = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
@@ -111,19 +113,24 @@ export default function RootLayout({
     "@type": "Organization",
     name: "CheFood AI",
     url: "https://chefoodai.vercel.app",
-    logo: "https://chefoodai.vercel.app/fotochef.jpg",
+    logo: "https://chefoodai.vercel.app/fotochef.webp",
     sameAs: ["https://x.com/omerAIdev"],
   };
 
   return (
-    <html lang="tr">
+    <html lang="tr" className={interFont.variable}>
       <head>
-        {/* --- Favicon ve logo --- */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/fotochef.jpg" />
-        <meta name="theme-color" content="#ffffff" />
+        {/* Viewport - Mobil için kritik */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />        
+        {/* Theme color */}
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
-        {/* --- JSON-LD verileri --- */}
+        {/* Preconnect - Performans için */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* JSON-LD */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdApp) }}
@@ -134,11 +141,18 @@ export default function RootLayout({
         />
       </head>
 
-      <body className={`${interFont.className} flex flex-col min-h-screen`}>
+      <body className={`${interFont.className} flex flex-col min-h-screen antialiased`}>
         <Queryclientprovider>
-          <Analytics />
-          <SpeedInsights />
-          <main>{children}</main>
+          {/* Analytics - Sadece production'da yükle */}
+          {process.env.NODE_ENV === "production" && (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          )}
+          
+          <main className="flex-1">{children}</main>
+          
           <footer className="text-center text-sm text-gray-500 mt-auto z-10">
             <div className="flex items-center justify-center p-1 backdrop-blur-md border-t-2 border-t-white/10">
               <p>© 2025 Ömer Aydın. Tüm hakları saklıdır.</p>
