@@ -47,7 +47,7 @@ export default function RecipePage() {
   if (!mounted) return <Suspense fallback={<Loading />}> <Loading /> </Suspense>;
 
   return  (
-    <div className="h-[100dvh] flex items-center justify-center p-4 relative">
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
       {/* Background overlay for better text readability */}
       <Suspense fallback={<Loading />}>
         <div className="fixed inset-0">
