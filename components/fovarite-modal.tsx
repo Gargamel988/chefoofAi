@@ -42,7 +42,7 @@ export default function FavoriteModal({ open, onOpenChange }: modalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="fixed left-[30%] md:left-[25%] xl:left-[18%] 2xl:left-[10%]  w-60 md:w-1/2 h-full border-r border-white/10 bg-black backdrop-blur-sm overflow-y-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-300 scrollbar-hide">
+      <DialogContent className="fixed w-60 md:w-1/2 h-full border-r border-white/10 bg-black backdrop-blur-sm overflow-y-auto data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 duration-300 scrollbar-hide">
         <DialogHeader>
           <DialogTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-white flex flex-row items-center gap-2">
             <Icon name="Star" className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 fill-yellow-400" />
