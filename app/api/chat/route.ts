@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const { dish } = await request.json();
     
     const response = streamObject({
-      model: google('gemini-2.0-flash'),
+      model: google('gemini-2.5-flash'),
       schema: streamObjectSchema,
       prompt: `
 	 sen bir aşçısın ve tarif oluşturucusun. 
