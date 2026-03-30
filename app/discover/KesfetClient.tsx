@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Sparkles } from "lucide-react";
 import { useRecipes } from "@/hooks/useRecipes";
 import { useCreators } from "@/hooks/useCreators";
+import Link from "next/link";
 
 type UserInfo = { id: string; avatarUrl: string | null; displayName: string };
 
@@ -92,7 +93,7 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
                 <section>
                     {/* Premium Upsell Card */}
                     <FadeUpCard>
-                        <div className="mx-4 sm:px-0 mb-8 p-6 rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-900 to-orange-950/20 border border-white/5 relative overflow-hidden group">
+                        <div className="mx-4 sm:px-0 mb-8 p-6 rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-900 to-orange-950/20 border border-white/5 relative overflow-hidden group px-4">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-orange-500/20 transition-all duration-700" />
                             <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
                                 <div className="w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20 shrink-0">
@@ -106,7 +107,7 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
                                     asChild
                                     className="bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl h-11 px-8 shadow-lg shadow-orange-600/20 shrink-0"
                                 >
-                                    <a href="/pricing">Hemen Yükselt</a>
+                                    <Link href="/pricing">Hemen Yükselt</Link>
                                 </Button>
                             </div>
                         </div>
