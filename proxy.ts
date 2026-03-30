@@ -35,6 +35,27 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 1. Handle Unauthenticated Users for Protected Routes
+  const protectedRoutes = [
+    "/profile",
+    "/weekly-plan",
+    "/weekly-plan-ai",
+    "/whatever-cook",
+    "/publish",
+    "/favorites",
+    "/checkout",
+  ];
+
+  const isProtectedPage = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+
+  if (!user && isProtectedPage) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+    return NextResponse.redirect(url);
+  }
+
   // 2. Fetch profile data (including onboarding status and identifiers)
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
@@ -59,7 +80,10 @@ export async function proxy(request: NextRequest) {
 
     // 4. Handle Own-Profile Redirection (Prevention of visiting self-public-page)
     const pathParts = request.nextUrl.pathname.split("/").filter(Boolean);
-    if (pathParts.length === 2 && pathParts[0] === "profile") {
+    if (
+      pathParts.length === 2 &&
+      (pathParts[0] === "profile" || pathParts[0] === "users")
+    ) {
       const identifier = pathParts[1];
       if (
         identifier === user.id ||
