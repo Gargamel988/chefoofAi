@@ -44,7 +44,7 @@ export function WeeklyPlanForm({ selectedDay, initialMealType, onCancel, onSave,
     const [activeFormStep, setActiveFormStep] = useState<FormStep>("basic")
 
     const form = useForm<WeeklyPlanFormData>({
-        resolver: zodResolver(weeklyPlanFormSchema),
+        resolver: zodResolver(weeklyPlanFormSchema) as any,
         defaultValues: {
             recipeTitle: "",
             selectedMealType: initialMealType,
@@ -436,12 +436,12 @@ export function WeeklyPlanForm({ selectedDay, initialMealType, onCancel, onSave,
                                                         <span>{item.unit}</span>
                                                     </div>
                                                     <Controller
-                                                        name={`nutrition.${item.key as any}`}
+                                                        name={`nutrition.${item.key as "cal" | "protein" | "carbs" | "fat"}`}
                                                         control={control}
                                                         render={({ field }) => (
                                                             <Input
-
                                                                 {...field}
+                                                                value={field.value as number}
                                                                 type="number"
                                                                 className={`w-full bg-transparent border-none outline-none text-2xl font-black ${item.color} placeholder:text-zinc-800`}
                                                                 placeholder="0"

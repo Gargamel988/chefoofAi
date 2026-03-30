@@ -78,9 +78,9 @@ export function useProfiles(userId?: string) {
     publicProfile,
     updateProfile: updateMutation,
     uploadAvatar: avatarMutation,
-    updateEmail: emailMutation.mutateAsync,
-    updatePassword: passwordMutation.mutateAsync,
-    insertProfile: insertProfileMutation.mutateAsync,
+    updateEmail: emailMutation,
+    updatePassword: passwordMutation,
+    insertProfile: insertProfileMutation,
     isUpdating:
       updateMutation.isPending ||
       avatarMutation.isPending ||

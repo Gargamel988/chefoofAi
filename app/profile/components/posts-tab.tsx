@@ -24,7 +24,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-export function PostsTab() {
+export function PostsTab({ profile: _ }: { profile: any }) {
     const { data: recipes, isLoading } = useMyRecipes();
     const { deleteRecipe, isDeleting } = useRecipeMutations();
     const [searchTerm, setSearchTerm] = useState("");

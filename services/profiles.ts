@@ -128,7 +128,13 @@ export const UpdatePassword = async (password: string) => {
   return { success: true };
 };
 
-export const UploadAvatar = async ({ userId, file }: { userId: string, file: File }) => {
+export const UploadAvatar = async ({
+  userId,
+  file,
+}: {
+  userId: string;
+  file: File;
+}) => {
   if (!userId || !file) throw new Error("userId veya dosya eksik");
 
   const supabase = await createClient();

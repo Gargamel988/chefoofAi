@@ -52,7 +52,7 @@ export const OnboardingFlow = () => {
             // Give a little time for the processing animation to feel premium
             await new Promise(r => setTimeout(r, 2000));
 
-            const result = await insertProfile({
+            const result = await insertProfile.mutateAsync({
                 diet_type: data.diets,
                 allergies: data.allergies,
                 cuisines: data.cuisines,

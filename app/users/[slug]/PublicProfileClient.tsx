@@ -22,7 +22,7 @@ export default function PublicProfileClient({
     isAuthenticated: boolean;
 }) {
     const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
-    const [followersCount, setFollowersCount] = useState(profile.followers_count || 0);
+    const [followersCount, setFollowersCount] = useState<number>(profile.followers_count || 0);
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<"recipes" | "about">("recipes");
 
@@ -201,7 +201,7 @@ export default function PublicProfileClient({
                                         <Link
                                             href={`/recipe/${recipe.slug}`}
                                             key={recipe.id}
-                                            className="aspect-square relative bg-zinc-900 overflow-hidden group rounded-xl bg-orange-500/5 sm:rounded-2xl"
+                                            className="aspect-square relative overflow-hidden group rounded-xl bg-orange-500/5 sm:rounded-2xl"
                                         >
                                             {recipe.content?.image ? (
                                                 <img

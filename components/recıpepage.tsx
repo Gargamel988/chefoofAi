@@ -297,7 +297,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
                   </h3>
                   {object.steps.map((step, i) => (
                     <div key={i} className="flex gap-6 group">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center font-black text-orange-400">
+                      <div className="shrink-0 w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center font-black text-orange-400">
                         {step?.step}
                       </div>
                       <p className="text-slate-300 leading-relaxed pt-2">{step?.description}</p>

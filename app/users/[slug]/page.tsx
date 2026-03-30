@@ -1,4 +1,4 @@
-import { GetProfileByUsername } from "@/services/profiles";
+import { GetProfileById } from "@/services/profiles";
 import { CheckIfFollowing } from "@/services/social";
 import { GetRecipesByUserId } from "@/services/recipes";
 import { createClient } from "@/lib/supabase/server";
@@ -13,7 +13,7 @@ export default async function PublicProfilePage({
     const username = params.slug;
 
     // Fetch the profile being viewed
-    const { data: profile, error: profileError } = await GetProfileByUsername(username);
+    const { data: profile, error: profileError } = await GetProfileById(username);
 
     if (profileError || !profile) {
         notFound();
