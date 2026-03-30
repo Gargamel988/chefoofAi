@@ -6,9 +6,13 @@ export default function Robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: "/api/",
+        disallow: [
+          "/api/",
+          "/profile/",
+          "/onboarding/",
+        ],
       },
     ],
-    sitemap: `https://chefoodai.vercel.app/sitemap.xml`,
+    sitemap: "https://chefoodai.vercel.app/sitemap.xml",
   };
 }

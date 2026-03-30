@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
     },
   },
   experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
     staleTimes: {
       dynamic: 30,
       static: 180,
@@ -74,6 +77,31 @@ const nextConfig: NextConfig = {
             key: "Cache-Control",
             // API yanıtları için kısa önbellek süresi + stale-while-revalidate
             value: "public, s-maxage=60, stale-while-revalidate=120",
+          },
+        ],
+      },
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },
