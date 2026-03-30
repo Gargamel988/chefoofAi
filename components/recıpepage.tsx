@@ -34,6 +34,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
     api: "/api/chat",
   });
 
+
   const submitDish = () => {
     if (subLoading) return;
     if (!dish.trim() || !submit) return;
@@ -49,6 +50,8 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
       });
       return;
     }
+
+
 
     // Note: Daily limits are also enforced on the server-side API for security
     submit({ dish, type: mode });

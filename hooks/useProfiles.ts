@@ -38,7 +38,6 @@ export function useProfiles(userId?: string) {
     mutationFn: UpdateProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      toast.success("Profil güncellendi!");
     },
     onError: (err: any) => {
       toast.error(translateSupabaseError(err.message));

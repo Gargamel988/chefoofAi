@@ -150,18 +150,24 @@ export async function POST(request: Request) {
 
           const now = new Date();
           const currentDayStr = now.toISOString().split("T")[0];
-          const lastDate = profile?.last_daily_suggestion_at ? new Date(profile.last_daily_suggestion_at).toISOString().split("T")[0] : null;
+          const lastDate = profile?.last_daily_suggestion_at
+            ? new Date(profile.last_daily_suggestion_at)
+                .toISOString()
+                .split("T")[0]
+            : null;
 
-          const newCount = (lastDate === currentDayStr) ? (profile?.daily_suggestion_count || 0) + 1 : 1;
+          const newCount =
+            lastDate === currentDayStr
+              ? (profile?.daily_suggestion_count || 0) + 1
+              : 1;
 
           await supabase
             .from("profiles")
-            .update({ 
+            .update({
               last_daily_suggestion_at: now.toISOString(),
-              daily_suggestion_count: newCount
+              daily_suggestion_count: newCount,
             })
             .eq("id", userId);
-            
         } catch (err) {
           console.error("Recommendations DB error:", err);
         }

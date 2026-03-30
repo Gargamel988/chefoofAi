@@ -84,7 +84,9 @@ export async function GenerateDailyRecommendations(body: any) {
   if (!response.ok) {
     const errorText = await response.text();
     console.error("Recommendations generation failed:", errorText);
-    throw new Error(`Generation failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Generation failed: ${response.status} ${response.statusText}`,
+    );
   }
 
   // We wait for the stream to complete to ensure data is saved by the API's onFinish
@@ -98,4 +100,3 @@ export async function GenerateDailyRecommendations(body: any) {
 
   return { success: true };
 }
-

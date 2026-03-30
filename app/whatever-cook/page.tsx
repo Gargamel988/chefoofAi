@@ -6,7 +6,7 @@ export default async function WhateverCookPage() {
 
     return (
         <Suspense fallback={<Loading />}>
-            <RecipePage mode="fridge" />
+            <RecipePage mode="standard" />
         </Suspense>
     );
 }

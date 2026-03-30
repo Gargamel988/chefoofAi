@@ -2,7 +2,10 @@ import { streamObjectSchema } from "@/schema/stream-object-schemes";
 import { streamObject } from "ai";
 import { createClient } from "@/lib/supabase/server";
 import { google } from "@ai-sdk/google";
-import { checkFeatureAccess, getSubscriptionStatusSnapshot } from "@/lib/subscription";
+import {
+  checkFeatureAccess,
+  getSubscriptionStatusSnapshot,
+} from "@/lib/subscription";
 
 export const runtime = "edge";
 
@@ -23,14 +26,14 @@ export async function POST(request: Request) {
 
     // 1. Subscription & Feature Access Check
     const sub = await getSubscriptionStatusSnapshot(user.id);
-    
+
     // Check Whatever-Cook Access
     if (isFridge) {
       const access = await checkFeatureAccess(user.id, "whatever_cook");
       if (!access.allowed) {
-        return new Response(JSON.stringify({ error: access.reason }), { 
-          status: 403, 
-          headers: { 'Content-Type': 'application/json' } 
+        return new Response(JSON.stringify({ error: access.reason }), {
+          status: 403,
+          headers: { "Content-Type": "application/json" },
         });
       }
     }
@@ -38,9 +41,9 @@ export async function POST(request: Request) {
     // Check Daily Recipe Limit
     const limitCheck = await checkFeatureAccess(user.id, "generate_recipe");
     if (!limitCheck.allowed) {
-      return new Response(JSON.stringify({ error: limitCheck.reason }), { 
-        status: 403, 
-        headers: { 'Content-Type': 'application/json' } 
+      return new Response(JSON.stringify({ error: limitCheck.reason }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
       });
     }
 
@@ -53,7 +56,7 @@ export async function POST(request: Request) {
 
     if (profile) {
       const isFullFiler = sub.tier !== "Free";
-      
+
       profileContext = `
 KİŞİSEL PROFİL VE BESLENME TERCİHLERİ:
 - Seçilen Diyet: ${profile.diet_type || "Belirtilmedi"}
