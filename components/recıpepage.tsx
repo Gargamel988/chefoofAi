@@ -21,7 +21,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
   const [publishedRecipeId, setPublishedRecipeId] = useState<string | null>(null);
   const [isSharingPost, setIsSharingPost] = useState(false);
   const router = useRouter();
-  
+
   const { tier, loading: subLoading } = useSubscription();
 
   const { favorites, toggleFavorite, isToggling } = useFavorite();
@@ -141,8 +141,8 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
             </h1>
           </div>
           <p className="text-lg text-slate-300/80 max-w-2xl mx-auto leading-relaxed">
-            {mode === "fridge" 
-              ? "Buzdolabındaki malzemelerini yaz, sana özel israfsız tarifler üretelim." 
+            {mode === "fridge"
+              ? "Buzdolabındaki malzemelerini yaz, sana özel israfsız tarifler üretelim."
               : "Yapay zeka destekli tarif asistanınız. Hangi yemeği pişirmek istediğinizi söyleyin, size özel tarifler sunalım."}
           </p>
         </div>
@@ -206,9 +206,11 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
             <p className="text-zinc-400 text-sm text-center">
               Pro plana geçerek reklamları kaldırın ve <span className="text-orange-500 font-bold">15 tarif/gün</span> hakkı kazanın!
             </p>
-            <Link href="/pricing" className="mt-3 text-orange-500 text-xs font-black uppercase hover:scale-105 transition-transform flex items-center gap-1">
-              Yükselt <Sparkles className="w-3 h-3" />
-            </Link>
+            <div className="flex items-center justify-center  animate-pulse rounded-full p-2">
+              <Link href="/pricing" className="relative z-10 mt-3 text-orange-500 text-xs font-black uppercase hover:scale-105 transition-transform flex items-center gap-1">
+                Yükselt <Sparkles className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
         )}
 

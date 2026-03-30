@@ -21,6 +21,7 @@ import {
     useToggleMealConsumed,
 } from "@/hooks/useWeeklyPlan";
 import { useSubscription } from "@/hooks/use-subscription";
+import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 export function WeeklyPlanClient() {
@@ -208,8 +209,20 @@ export function WeeklyPlanClient() {
     );
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white pb-32 font-sans">
-            <div className="max-w-4xl mx-auto px-4 pt-8 space-y-8">
+        <div className="min-h-screen bg-black text-white pb-32">
+            {/* Premium Upsell Mini Banner for Free Users */}
+            {tier === "Free" && (
+                <div className="bg-linear-to-r from-orange-600/20 to-amber-500/20 border-b border-orange-500/10 py-3 px-4 text-center relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-linear-to-r from-orange-500/5 to-transparent animate-pulse" />
+                    <p className="text-sm font-bold text-orange-200 relative z-10 flex items-center justify-center gap-2">
+                        <Sparkles className="w-4 h-4 text-orange-500 fill-orange-500" />
+                        AI ile haftalık planlama Premium bir özelliktir. 
+                        <a href="/pricing" className="text-white underline decoration-orange-500/50 hover:decoration-orange-500 underline-offset-4 ml-1">Planları İncele</a>
+                    </p>
+                </div>
+            )}
+
+            <div className="max-w-3xl mx-auto px-4 pt-6 space-y-8">
                 {/* Debug Error Display (Sadece hata varsa görünür) */}
                 {streamError && (
                     <div className="bg-red-500/10 border border-red-500/50 p-4 rounded-2xl text-red-400 text-sm">

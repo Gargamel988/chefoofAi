@@ -61,7 +61,7 @@ export const OnboardingFlow = () => {
             });
 
             if (result && !result.error) {
-                router.push("/");
+                router.push("/pricing");
                 router.refresh();
             } else {
                 setIsProcessing(false);

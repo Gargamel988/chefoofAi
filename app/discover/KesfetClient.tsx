@@ -58,7 +58,7 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
         id: c.id,
         name: c.name || "İsimsiz Şef",
         username: c.username || "chef",
-        img: c.avatar_url || `https://i.pravatar.cc/150?u=${c.id}`
+        img: c.avatar_url
     }));
 
     return (
@@ -90,6 +90,28 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
 
                 {/* Recipe Feed */}
                 <section>
+                    {/* Premium Upsell Card */}
+                    <FadeUpCard>
+                        <div className="mx-4 sm:px-0 mb-8 p-6 rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-900 to-orange-950/20 border border-white/5 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-orange-500/20 transition-all duration-700" />
+                            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+                                <div className="w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20 shrink-0">
+                                    <Sparkles className="w-8 h-8 text-orange-500 fill-orange-500/20" />
+                                </div>
+                                <div className="flex-1 text-center md:text-left">
+                                    <h4 className="text-lg font-black text-white">Yapay Zeka ile Haftalık Planla</h4>
+                                    <p className="text-zinc-400 text-sm mt-1">Diyetine ve damak tadına özel haftalık yemek planlarını AI ile saniyeler içinde oluştur.</p>
+                                </div>
+                                <Button
+                                    asChild
+                                    className="bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-2xl h-11 px-8 shadow-lg shadow-orange-600/20 shrink-0"
+                                >
+                                    <a href="/pricing">Hemen Yükselt</a>
+                                </Button>
+                            </div>
+                        </div>
+                    </FadeUpCard>
+
                     <div className="flex items-center justify-between mb-4 px-4 sm:px-0">
                         <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest flex items-center gap-2">
                             <Sparkles className="w-4 h-4" /> {isFiltered ? "Sonuçlar" : "Sizin İçin Seçtiklerimiz"}

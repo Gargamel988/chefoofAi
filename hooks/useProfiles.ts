@@ -21,10 +21,11 @@ export function useProfiles(userId?: string) {
   const queryClient = useQueryClient();
 
   // Queries
-  const { data: myProfile } = useSuspenseQuery<Profile>({
-    queryKey: ["profile", "me"],
-    queryFn: getMyProfile,
-  });
+  const { data: myProfile, isLoading: isMyProfileLoading } =
+    useQuery<Profile | null>({
+      queryKey: ["profile", "me"],
+      queryFn: getMyProfile,
+    });
 
   const { data: publicProfile } = useQuery({
     queryKey: ["profile", userId],

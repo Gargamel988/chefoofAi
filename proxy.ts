@@ -35,28 +35,40 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // 1. Handle Unauthenticated Users for Protected Routes
-  const protectedRoutes = [
-    "/profile",
-    "/weekly-plan",
-    "/weekly-plan-ai",
-    "/whatever-cook",
-    "/publish",
-    "/favorites",
-    "/checkout",
+  const { pathname } = request.nextUrl;
+
+  // 1. Define Public & Internal Routes (No Auth Required)
+  const publicRoutes = [
+    "/auth",
+    "/api/auth",
+    "/recipe",
+    "/discover",
+    "/kesfet",
+    "/users",
   ];
+  const isPublicPage =
+    pathname === "/" ||
+    publicRoutes.some((route) => pathname.startsWith(route));
 
-  const isProtectedPage = protectedRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route),
-  );
-
-  if (!user && isProtectedPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth";
-    return NextResponse.redirect(url);
+  // 2. Handle Alias & Guest Redirection
+  if (pathname === "/kesfet") {
+    return NextResponse.redirect(new URL("/discover", request.url));
   }
 
-  // 2. Fetch profile data (only for logged-in users)
+  if (!user) {
+    if (pathname === "/") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/discover";
+      return NextResponse.redirect(url);
+    }
+    if (!isPublicPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth";
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // 3. Fetch profile data (only for logged-in users)
   if (user) {
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
@@ -64,36 +76,43 @@ export async function proxy(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-  const allowedPathsForNonOnboarded = ["/onboarding", "/auth", "/api/auth"];
-
-  const isAllowedPath = allowedPathsForNonOnboarded.some((path) =>
-    request.nextUrl.pathname.startsWith(path),
-  );
-
-  // 3. Handle Onboarding Redirection
-  if (user && !isAllowedPath) {
-    // Only redirect to onboarding if we can't find a profile OR it's explicitly incomplete
-    // We ignore transient query errors (!profileError) to avoid accidental redirects
-    if (!profile?.onboarding_completed && !profileError) {
-      const redirectUrl = new URL("/onboarding", request.url);
-      return NextResponse.redirect(redirectUrl);
+    if (profileError && profileError.code !== "PGRST116") {
+      console.error("Middleware profile fetch error:", profileError);
     }
 
-    // 4. Handle Own-Profile Redirection (Prevention of visiting self-public-page)
-    const pathParts = request.nextUrl.pathname.split("/").filter(Boolean);
-    if (
-      pathParts.length === 2 &&
-      (pathParts[0] === "profile" || pathParts[0] === "users")
-    ) {
-      const identifier = pathParts[1];
+    const allowedPathsForNonOnboarded = ["/onboarding", "/auth", "/api/auth"];
+
+    const isAllowedPath = allowedPathsForNonOnboarded.some((path) =>
+      request.nextUrl.pathname.startsWith(path),
+    );
+
+    // 3. Handle Onboarding Redirection
+    if (user && !isAllowedPath) {
+      // Redirect to onboarding if profile is missing (new user) or explicitly incomplete
+      const isMissingProfile = profileError?.code === "PGRST116";
       if (
-        identifier === user.id ||
-        (profile?.name && identifier === profile.name)
+        isMissingProfile ||
+        (!profile?.onboarding_completed && !profileError)
       ) {
-        return NextResponse.redirect(new URL("/profile", request.url));
+        const redirectUrl = new URL("/onboarding", request.url);
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      // 4. Handle Own-Profile Redirection (Prevention of visiting self-public-page)
+      const pathParts = request.nextUrl.pathname.split("/").filter(Boolean);
+      if (
+        pathParts.length === 2 &&
+        (pathParts[0] === "profile" || pathParts[0] === "users")
+      ) {
+        const identifier = pathParts[1];
+        if (
+          identifier === user.id ||
+          (profile?.name && identifier === profile.name)
+        ) {
+          return NextResponse.redirect(new URL("/profile", request.url));
+        }
       }
     }
-  }
 
     // 5. Redirect users AWAY from onboarding if they are already completed
     if (request.nextUrl.pathname.startsWith("/onboarding")) {

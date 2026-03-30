@@ -28,7 +28,13 @@ export function CreatorsSection({ creators }: CreatorsSectionProps) {
                             <div className="relative mb-3">
                                 <div className="w-16 h-16 rounded-full p-0.5 bg-linear-to-br from-orange-500 to-amber-500">
                                     <div className="w-full h-full rounded-full border-2 border-zinc-900 overflow-hidden">
-                                        <img src={creator.img} alt={creator.name} className="w-full h-full object-cover" />
+                                        {creator.img ? (
+                                            <img src={creator.img} alt={creator.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
+                                                <span className="text-zinc-500 font-bold text-lg">{creator.name.charAt(0).toUpperCase()}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

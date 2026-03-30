@@ -32,7 +32,7 @@ export const getMyProfile = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) throw new Error("Kullanıcı girişi yapılmamış");
+  if (!user) return null;
 
   const { data, error } = await supabase
     .from("profiles")
@@ -40,7 +40,10 @@ export const getMyProfile = async () => {
     .eq("id", user.id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw error;
+  }
   return data as Profile;
 };
 

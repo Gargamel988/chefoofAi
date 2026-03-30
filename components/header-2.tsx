@@ -71,6 +71,13 @@ export function Header({ profile }: HeaderProps) {
 		if (profile) {
 			return (
 				<div className="flex items-center gap-3 relative" ref={userMenuRef}>
+					<Link href="/pricing" className="hidden lg:block">
+						<Button variant="ghost" size="sm" className="bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 gap-2 h-9 rounded-xl font-bold border border-orange-500/20">
+							<Sparkles className="w-4 h-4 fill-orange-500" />
+							<span>Premium'a Geç</span>
+						</Button>
+					</Link>
+
 					<Link href="/publish" className="hidden sm:block">
 						<Button variant="ghost" size="sm" className="text-orange-500 hover:text-orange-400 hover:bg-orange-500/10 gap-2 h-9 rounded-xl font-bold">
 							<PlusCircle className="w-4 h-4" />
@@ -99,19 +106,29 @@ export function Header({ profile }: HeaderProps) {
 								exit={{ opacity: 0, scale: 0.95, y: 10 }}
 								className="absolute right-0 top-full mt-3 w-64 bg-zinc-900 border border-white/10 rounded-2xl shadow-2xl p-2 z-[60] backdrop-blur-3xl"
 							>
-								<div className="px-3 py-2.5 mb-2">
-									<p className="text-sm font-bold text-white leading-none">{profile.name}</p>
-									<p className="text-xs text-zinc-500 mt-1">ID: {profile.id?.slice(0, 8)}...</p>
+								<div className="px-3 py-2.5 mb-2 border-b border-white/5">
+									<div className="flex items-center justify-between mb-1">
+										<p className="text-sm font-bold text-white leading-none">{profile.name}</p>
+										<span className="text-[10px] px-1.5 py-0.5 rounded-md bg-orange-500/20 text-orange-500 font-black tracking-wider uppercase">{profile.subscription_tier || 'Free'}</span>
+									</div>
+									<p className="text-[10px] text-zinc-500 mt-1 uppercase tracking-widest leading-none">Kullanıcı Paneli</p>
 								</div>
 								<div className="space-y-1">
+									{profile.subscription_tier !== 'Premium' && (
+										<Link href="/pricing" onClick={() => setUserMenuOpen(false)} className="block mb-2">
+											<div className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold text-white bg-linear-to-br from-orange-600 to-amber-500 hover:shadow-lg hover:shadow-orange-500/20 transition-all">
+												<Sparkles className="w-4 h-4 fill-white" /> Planımı Yükselt
+											</div>
+										</Link>
+									)}
 									<Link href="/profile" onClick={() => setUserMenuOpen(false)}>
 										<div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">
-											<User className="w-4 h-4" /> Profilim
+											<User className="w-4 h-4" /> Profil Ayarları
 										</div>
 									</Link>
 									<Link href="/weekly-plan" onClick={() => setUserMenuOpen(false)}>
 										<div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-zinc-300 hover:text-white hover:bg-white/5 transition-colors">
-											<LayoutDashboard className="w-4 h-4" /> Yemek Planlarım
+											<CalendarDays className="w-4 h-4" /> Yemek Planlarım
 										</div>
 									</Link>
 								</div>
@@ -131,10 +148,10 @@ export function Header({ profile }: HeaderProps) {
 
 		return (
 			<div className="flex items-center gap-2">
-				<Link href="/auth/login">
+				<Link href="/auth">
 					<Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white rounded-xl">Giriş Yap</Button>
 				</Link>
-				<Link href="/auth/signup">
+				<Link href="/auth">
 					<Button size="sm" className="bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-5 h-9 font-bold shadow-lg shadow-orange-600/20">Katıl</Button>
 				</Link>
 			</div>

@@ -11,7 +11,7 @@ export const SignInGoogle = async () => {
         access_type: "offline",
         prompt: "select_account",
       },
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/callback`,
     },
   });
 
