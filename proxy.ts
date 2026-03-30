@@ -56,12 +56,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. Fetch profile data (including onboarding status and identifiers)
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("onboarding_completed, name")
-    .eq("id", user?.id)
-    .single();
+  // 2. Fetch profile data (only for logged-in users)
+  if (user) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("onboarding_completed, name")
+      .eq("id", user.id)
+      .single();
 
   const allowedPathsForNonOnboarded = ["/onboarding", "/auth", "/api/auth"];
 
@@ -94,11 +95,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 5. Redirect users AWAY from onboarding if they are already completed
-  if (user && request.nextUrl.pathname.startsWith("/onboarding")) {
-    if (profile?.onboarding_completed) {
-      const redirectUrl = new URL("/", request.url);
-      return NextResponse.redirect(redirectUrl);
+    // 5. Redirect users AWAY from onboarding if they are already completed
+    if (request.nextUrl.pathname.startsWith("/onboarding")) {
+      if (profile?.onboarding_completed) {
+        const redirectUrl = new URL("/", request.url);
+        return NextResponse.redirect(redirectUrl);
+      }
     }
   }
 
