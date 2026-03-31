@@ -30,6 +30,7 @@ export default function RecipeSettings({ settings, onChange }: RecipeSettingsPro
   const handleChange = (key: string, value: any) => {
     onChange({ ...settings, [key]: value });
   };
+  console.log(settings);
 
   return (
     <div className="space-y-10">
@@ -66,7 +67,7 @@ export default function RecipeSettings({ settings, onChange }: RecipeSettingsPro
             type="number"
             value={settings.servings}
             onChange={(e) => handleChange("servings", e.target.value)}
-            className="h-12 bg-zinc-900/30 border-white/5 focus:ring-orange-500/20 rounded-xl font-bold backdrop-blur-md"
+            className="h-12  bg-zinc-900/30 border-white/5 focus:ring-orange-500/20 rounded-xl font-bold backdrop-blur-md"
           />
         </div>
       </div>

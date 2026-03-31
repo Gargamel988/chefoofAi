@@ -39,16 +39,15 @@ export default function Publisher({ initialRecipe, userId, user, mode }: Publish
   const [formData, setFormData] = useState({
     title: initialRecipe?.title || "",
     description: initialRecipe?.description || "",
-    caption: initialRecipe?.caption || "",
     coverImage: initialRecipe?.cover_image || "",
     ingredients: initialRecipe?.recipe_content?.ingredients || [],
     steps: initialRecipe?.recipe_content?.steps || [],
-    prepTime: initialRecipe?.recipe_content?.times?.prepTime || "",
-    cookTime: initialRecipe?.recipe_content?.times?.cookTime || "",
-    servings: initialRecipe?.recipe_content?.servings || "1",
-    difficulty: initialRecipe?.recipe_content?.difficulty || "medium",
-    cuisine: initialRecipe?.recipe_content?.cuisine || "",
-    mealType: initialRecipe?.meal_type || "Ana Yemek",
+    prepTime: initialRecipe?.prep_time_minutes || initialRecipe?.recipe_content?.times?.prepTime || initialRecipe?.recipe_content?.times?.prepMinutes || "",
+    cookTime: initialRecipe?.cook_time_minutes || initialRecipe?.recipe_content?.times?.cookTime || initialRecipe?.recipe_content?.times?.cookMinutes || "",
+    servings: initialRecipe?.servings || initialRecipe?.recipe_content?.servings || "4",
+    difficulty: initialRecipe?.difficulty || initialRecipe?.recipe_content?.difficulty || "medium",
+    cuisine: initialRecipe?.cuisine || initialRecipe?.recipe_content?.cuisine || "",
+    mealType: initialRecipe?.meal_type || initialRecipe?.recipe_content?.mealType || "Ana Yemek",
     isPublic: initialRecipe?.is_public ?? true,
     nutrition: initialRecipe?.recipe_content?.nutrition || {
       calories: 0,
@@ -211,17 +210,6 @@ export default function Publisher({ initialRecipe, userId, user, mode }: Publish
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="caption" className="text-xs font-black uppercase tracking-widest text-zinc-500 ml-1">Akış Notu (Opsiyonel)</Label>
-                  <textarea
-                    id="caption"
-                    placeholder="Keşfet akışında başlığın altında görünecek ilgi çekici bir cümle..."
-                    value={formData.caption}
-                    onChange={(e) => updateField("caption", e.target.value)}
-                    className="w-full min-h-[100px] p-5 bg-zinc-900/30 border border-white/5 rounded-2xl text-zinc-200 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500/40 transition-all font-medium leading-relaxed backdrop-blur-md"
-                  />
-                </div>
-
-                <div className="space-y-3">
                   <Label htmlFor="description" className="text-xs font-black uppercase tracking-widest text-zinc-500 ml-1">Hikaye & Detay (Opsiyonel)</Label>
                   <textarea
                     id="description"
@@ -293,7 +281,7 @@ export default function Publisher({ initialRecipe, userId, user, mode }: Publish
                     { label: "Karbonhidrat", key: "carbsGrams", suffix: "g" }
                   ].map((item) => (
                     <div key={item.key} className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500 ml-1">{item.label} ({item.suffix})</Label>
+                      <Label className="text-[9px] font-black uppercase tracking-widest text-zinc-500 ml-1">{item.label} ({item.suffix})</Label>
                       <Input
                         type="number"
                         value={formData.nutrition[item.key as keyof typeof formData.nutrition]}

@@ -25,7 +25,6 @@ export function DiscoverCard({ post: recipe, index, userId }: DiscoverCardProps)
     const recipeContent = recipe.recipe_content || {};
     const nutrition = recipeContent.nutrition || {};
 
-    console.log(recipe.profiles.id)
 
     const fallbackImage = "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=600&auto=format&fit=crop";
     const displayImage = getSafePublicUrl(recipe.cover_image || fallbackImage);

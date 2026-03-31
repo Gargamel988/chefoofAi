@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import DarkVeil from "./DarkVeil";
 import Loading from "@/app/loading";
-import { Star, Users, ChefHat, Utensils, Sparkles, Share2, Bookmark } from "lucide-react";
+import { Star, Users, ChefHat, Utensils, Sparkles, Share2, Bookmark, Check, Clock } from "lucide-react";
 import { useFavorite } from '@/hooks/useFavorite'
 import { useSocial } from "@/hooks/useSocial";
 import { useRecipeMutations } from "@/hooks/useRecipes";
@@ -20,6 +20,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
   const [dish, setDish] = useState("");
   const [publishedRecipeId, setPublishedRecipeId] = useState<string | null>(null);
   const [isSharingPost, setIsSharingPost] = useState(false);
+  const [checkedIngredients, setCheckedIngredients] = useState<number[]>([]);
   const router = useRouter();
 
   const { tier, loading: subLoading } = useSubscription();
@@ -33,6 +34,12 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
     schema: streamObjectSchema,
     api: "/api/chat",
   });
+
+  const toggleIngredient = (index: number) => {
+    setCheckedIngredients(prev =>
+      prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]
+    );
+  };
 
 
   const submitDish = () => {
@@ -57,6 +64,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
     submit({ dish, type: mode });
     setPublishedRecipeId(null);
     setDish("");
+    setCheckedIngredients([]);
   };
 
   const handleToggleFavorite = async () => {
@@ -70,7 +78,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
         slug: object.slug || `recipe-${Math.random().toString(36).substring(2, 7)}`,
         description: (object as any).description || "",
         recipe_content: object,
-        meal_type: (object as any).mealType || (object as any).cuisine || "Ana Yemek",
+        meal_type: (object as any).mealType || "Ana Yemek",
         calories: object.nutrition?.calories ? Math.round(object.nutrition.calories) : undefined,
         protein: object.nutrition?.proteinGrams ? Math.round(object.nutrition.proteinGrams) : undefined,
         carbs: object.nutrition?.carbsGrams ? Math.round(object.nutrition.carbsGrams) : undefined,
@@ -108,7 +116,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
         slug: object.slug || `recipe-${Math.random().toString(36).substring(2, 7)}`,
         description: (object as any).description || "",
         recipe_content: object,
-        meal_type: (object as any).mealType || (object as any).cuisine || "Ana Yemek",
+        meal_type: (object as any).mealType || "Ana Yemek",
         calories: object.nutrition?.calories ? Math.round(object.nutrition.calories) : undefined,
         protein: object.nutrition?.proteinGrams ? Math.round(object.nutrition.proteinGrams) : undefined,
         carbs: object.nutrition?.carbsGrams ? Math.round(object.nutrition.carbsGrams) : undefined,
@@ -202,7 +210,7 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
         </Card>
 
         {/* Ad Placeholder for Free Tier */}
-        {!subLoading && tier === "Free" && (
+        {!subLoading && tier === "Free" && !object && (
           <div className="mt-8 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl flex flex-col items-center justify-center min-h-[100px] group overflow-hidden relative">
             <div className="absolute inset-0 bg-linear-to-r from-orange-500/5 to-transparent animate-pulse" />
             <span className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-2">REKLAM</span>
@@ -239,6 +247,11 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
                     {object.difficulty && (
                       <span className="px-3 py-1 bg-blue-500/20 rounded-full border border-blue-400/30">
                         {object.difficulty === "easy" ? "Kolay" : object.difficulty === "medium" ? "Orta" : "Zor"}
+                      </span>
+                    )}
+                    {((object as any).mealType || (object as any).cuisine) && (
+                      <span className="px-3 py-1 bg-zinc-800 rounded-full border border-white/10 text-xs font-bold uppercase tracking-wider text-zinc-400">
+                        {[(object as any).mealType, (object as any).cuisine].filter(Boolean).join(" • ")}
                       </span>
                     )}
                   </div>
@@ -279,17 +292,51 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
                 </div>
               </div>
 
+              {/* Nutrition Dashboard */}
+              {object.nutrition && (
+                <div className="mb-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { label: "Kalori", value: object.nutrition.calories, unit: "kcal" },
+                    { label: "Protein", value: object.nutrition.proteinGrams, unit: "g" },
+                    { label: "Karb.", value: object.nutrition.carbsGrams, unit: "g" },
+                    { label: "Yağ", value: object.nutrition.fatGrams, unit: "g" }
+                  ].map((n, i) => (
+                    <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
+                      <div className="text-xs text-slate-500 uppercase font-bold tracking-tighter mb-1">{n.label}</div>
+                      <div className="text-xl font-bold text-orange-400">{Math.round(Number(n.value) || 0)}<span className="text-[10px] ml-1 opacity-50">{n.unit}</span></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               {object.ingredients && (
                 <div className="mb-8 p-6 bg-white/5 rounded-3xl border border-white/10">
-                  <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <Utensils className="w-6 h-6 text-orange-400" /> Malzemeler
+                  <h3 className="text-xl font-bold text-white mb-6 flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Utensils className="w-6 h-6 text-orange-400" /> Malzemeler
+                    </span>
+                    <span className="text-xs font-medium text-slate-500">{checkedIngredients.length} / {object.ingredients.length}</span>
                   </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {object.ingredients.map((ing, i) => (
-                      <div key={i} className="flex items-center gap-3 text-slate-200">
-                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                        {ing?.amount} {ing?.unit} {ing?.name}
-                      </div>
+                      <button
+                        key={i}
+                        onClick={() => toggleIngredient(i)}
+                        className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                          checkedIngredients.includes(i) 
+                            ? "bg-orange-500/10 border-orange-500/20 opacity-60" 
+                            : "bg-white/5 border-white/5 hover:border-white/20"
+                        }`}
+                      >
+                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                          checkedIngredients.includes(i) ? "bg-orange-500 border-orange-500" : "bg-transparent border-white/20"
+                        }`}>
+                          {checkedIngredients.includes(i) && <Check className="w-3 h-3 text-black" />}
+                        </div>
+                        <div className={`flex-1 text-sm ${checkedIngredients.includes(i) ? "line-through text-slate-500 italic" : "text-slate-200"}`}>
+                           <span className="font-bold text-orange-400">{ing?.amount} {ing?.unit}</span> {ing?.name}
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -302,12 +349,37 @@ export default function RecipePage({ mode = "standard" }: { mode?: "standard" | 
                   </h3>
                   {object.steps.map((step, i) => (
                     <div key={i} className="flex gap-6 group">
-                      <div className="shrink-0 w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center font-black text-orange-400">
-                        {step?.step}
+                      <div className="shrink-0 flex flex-col items-center gap-2">
+                        <div className="w-10 h-10 rounded-2xl bg-zinc-800 border border-white/10 flex items-center justify-center font-black text-orange-400 group-hover:bg-orange-500 group-hover:text-black transition-all">
+                          {step?.step}
+                        </div>
+                        {step?.durationMinutes && (
+                          <span className="text-[10px] font-bold text-zinc-500 italic">{step.durationMinutes}dk</span>
+                        )}
                       </div>
-                      <p className="text-slate-300 leading-relaxed pt-2">{step?.description}</p>
+                      <p className="text-slate-300 leading-relaxed pt-1 text-lg">{step?.description}</p>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Tips Section */}
+              {(object as any).tips && (object as any).tips.length > 0 && (
+                <div className="mt-12 p-8 bg-orange-500/5 border border-orange-500/20 rounded-[32px] overflow-hidden relative group">
+                  <div className="absolute -right-8 -bottom-8 opacity-5 group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-40 h-40" />
+                  </div>
+                  <h4 className="text-lg font-bold text-orange-400 mb-4 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" /> Şefin Püf Noktaları
+                  </h4>
+                  <ul className="space-y-3">
+                    {(object as any).tips.map((tip: string, idx: number) => (
+                      <li key={idx} className="text-slate-400 italic text-sm leading-relaxed flex gap-2">
+                        <span className="text-orange-500">•</span>
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>

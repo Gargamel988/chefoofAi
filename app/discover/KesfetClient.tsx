@@ -27,7 +27,6 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
     const { data: recipesData } = useRecipes(20);
     const { data: creatorsData } = useCreators(10); // Check if useCreators exists or useProfiles
 
-    console.log(recipesData)
     const toggleCategory = (category: string) => {
         if (category === "Tümü") {
             setSelectedCategories(["Tümü"]);
@@ -86,14 +85,14 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
 
                 {/* Creator Spotlight */}
                 {!isFiltered && activeTab === "Trending" && creators.length > 0 && (
-                    <CreatorsSection creators={creators} />
+                    <CreatorsSection creators={creators} userId={user?.id} />
                 )}
 
                 {/* Recipe Feed */}
                 <section>
                     {/* Premium Upsell Card */}
                     <FadeUpCard>
-                        <div className="mx-4 sm:px-0 mb-8 p-6 rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-900 to-orange-950/20 border border-white/5 relative overflow-hidden group px-4">
+                        <div className="mx-4 px-4 mb-8 p-6 rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-900 to-orange-950/20 border border-white/5 relative overflow-hidden group ">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-orange-500/20 transition-all duration-700" />
                             <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
                                 <div className="w-16 h-16 rounded-2xl bg-orange-500/10 flex items-center justify-center border border-orange-500/20 shrink-0">

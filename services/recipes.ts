@@ -33,6 +33,9 @@ export const GetPublicRecipes = async (limit = 20) => {
         id,
         user_id,
         type
+      ),
+      recipe_comments (
+        recipe_id
       )
     `,
     )
@@ -44,7 +47,14 @@ export const GetPublicRecipes = async (limit = 20) => {
     console.error("Tarifleri çekerken hata:", JSON.stringify(error, null, 2));
     return { data: [], error };
   }
-  return { data, error: null };
+
+  // Transform data to flatten comment count
+  const processedData = (data || []).map((recipe: any) => ({
+    ...recipe,
+    comments_count: recipe.recipe_comments?.length || 0,
+  }));
+
+  return { data: processedData, error: null };
 };
 
 export const GetRecipeBySlug = async (slug: string) => {
@@ -58,11 +68,18 @@ export const GetRecipeBySlug = async (slug: string) => {
         id,
         name,
         avatar_url
+      ),
+      recipe_comments (
+        recipe_id
       )
     `,
     )
     .eq("slug", slug)
     .single();
+
+  if (data) {
+    data.comments_count = data.recipe_comments?.length || 0;
+  }
 
   return { data, error };
 };
@@ -77,6 +94,9 @@ export const GetRecipesByUserId = async (userId: string) => {
       profiles (
         name,
         avatar_url
+      ),
+      recipe_comments (
+        recipe_id
       )
     `,
     )
@@ -91,7 +111,13 @@ export const GetRecipesByUserId = async (userId: string) => {
     );
     return { data: [], error };
   }
-  return { data, error: null };
+
+  const processedData = (data || []).map((recipe: any) => ({
+    ...recipe,
+    comments_count: recipe.recipe_comments?.length || 0,
+  }));
+
+  return { data: processedData, error: null };
 };
 
 export const GetMyAllRecipes = async () => {
@@ -110,6 +136,9 @@ export const GetMyAllRecipes = async () => {
       recipe_interactions (
         id,
         type
+      ),
+      recipe_comments (
+        recipe_id
       )
     `,
     )
@@ -131,6 +160,7 @@ export const GetMyAllRecipes = async () => {
     saves_count:
       recipe.recipe_interactions?.filter((i: any) => i.type === "save")
         .length || 0,
+    comments_count: recipe.recipe_comments?.length || 0,
   }));
 
   return { data: processedData, error: null };
@@ -147,11 +177,18 @@ export const GetRecipeById = async (id: string) => {
         id,
         name,
         avatar_url
+      ),
+      recipe_comments (
+        recipe_id
       )
     `,
     )
     .eq("id", id)
     .single();
+
+  if (data) {
+    data.comments_count = data.recipe_comments?.length || 0;
+  }
 
   return { data, error };
 };

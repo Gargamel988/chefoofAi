@@ -8,7 +8,7 @@ import { RecipeSteps } from "@/components/recipe/RecipeSteps";
 import { RecipeNutrition } from "@/components/recipe/RecipeNutrition";
 import { RecipeTips } from "@/components/recipe/RecipeTips";
 import { useQuery } from "@tanstack/react-query";
-import { GetRecipeById, getRecipeByIdWithAuth, GetRecipeBySlug } from "@/services/recipes";
+import { getRecipeByIdWithAuth, GetRecipeBySlug } from "@/services/recipes";
 import { createClient } from "@/lib/supabase/client";
 import { useProfiles } from "@/hooks/useProfiles";
 
@@ -54,10 +54,11 @@ interface Recipe {
 
 export default function TarifDetailClient({
     recipe: initialRecipe,
+    userId,
 }: {
     recipe: Recipe;
+    userId: string | undefined;
 }) {
-    const supabase = createClient();
     // Re-fetch or get from cache using suspense
     const { data: recipe } = useQuery({
         queryKey: ["recipe", initialRecipe.slug],
@@ -73,8 +74,6 @@ export default function TarifDetailClient({
         initialData: initialRecipe
     });
 
-    const { myProfile } = useProfiles();
-    const userId = myProfile?.id;
 
     const { data: user } = useQuery({
         queryKey: ["user", recipe.id],
@@ -96,12 +95,12 @@ export default function TarifDetailClient({
 
     const handleSave = async () => {
         if (!recipe.id) return;
-        await handleSocialAction(recipe.id, "save", userId);
+        await handleSocialAction(recipe.id, "save");
     };
 
     const handleLike = async () => {
         if (!recipe.id) return;
-        await handleSocialAction(recipe.id, "like", userId);
+        await handleSocialAction(recipe.id, "like");
     };
 
     return (

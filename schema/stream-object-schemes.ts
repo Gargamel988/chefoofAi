@@ -14,6 +14,7 @@ export const streamObjectSchema = z.object({
     })
     .describe("Hazırlık, pişirme ve toplam süre (dakika)"),
   cuisine: z.string().describe("Mutfak türü (Türk, İtalyan vb.)"),
+  mealType: z.string().describe("Yemek öğünü (Kahvaltı, Öğle Yemeği, Akşam Yemeği, Atıştırmalık vb.)"),
   difficulty: z.enum(["easy", "medium", "hard"]).describe("Zorluk seviyesi"),
   ingredients: z
     .array(

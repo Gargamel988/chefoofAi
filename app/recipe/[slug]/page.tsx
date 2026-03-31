@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import LoadingScreen from "@/app/loading";
 import { Metadata, ResolvingMetadata } from "next";
 import JsonLd from "@/components/JsonLd";
+import { createClient } from "@/lib/supabase/server";
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -95,6 +96,9 @@ export default async function TarifPage({
         notFound();
     }
 
+    const supabase = await createClient();
+    const { data: user } = await supabase.auth.getUser();
+    const userId = user?.user?.id;
 
     // AI tariflerinde recipe_content alanı kullanılıyor, manuel olanlarda content.
     // TarifDetailClient 'content' prop'unu beklediği için normalize ediyoruz.
@@ -120,7 +124,7 @@ export default async function TarifPage({
         <HydrationBoundary state={dehydrate(queryClient)}>
             <JsonLd data={jsonLd} />
             <Suspense fallback={<LoadingScreen />}>
-                <TarifDetailClient recipe={normalizedRecipe} />
+                <TarifDetailClient recipe={normalizedRecipe} userId={userId} />
             </Suspense>
         </HydrationBoundary>
     );
