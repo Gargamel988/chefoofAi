@@ -7,6 +7,9 @@ import { MealData } from "./types";
 import { MealCard } from "./MealCard";
 import { useFavorite } from "@/hooks/useFavorite";
 import { useRecommendations } from "@/hooks/useRecommendations";
+import { useSubscription } from "@/hooks/use-subscription";
+import { SUBSCRIPTION_CONFIG } from "@/config/subscriptions";
+import { toast } from "sonner";
 
 const MEAL_ORDER: Record<string, number> = { "Kahvaltı": 1, "Öğle": 2, "Akşam": 3 };
 const SKELETON_MEALS = ["Kahvaltı", "Öğle", "Akşam"] as const;
@@ -14,9 +17,19 @@ const SKELETON_MEALS = ["Kahvaltı", "Öğle", "Akşam"] as const;
 export default function MealRecommendations() {
     const { recommendations, generate, updateConsumption } = useRecommendations();
     const { favorites, toggleFavorite } = useFavorite();
+    const sub = useSubscription();
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [regenMealType, setRegenMealType] = useState<string | null>(null);
+
+    // Limit check logic
+    const isDevelopment = process.env.NODE_ENV === "development";
+    const today = new Date().toISOString().split("T")[0];
+    const lastDate = sub.lastDailySuggestionAt ? new Date(sub.lastDailySuggestionAt).toISOString().split("T")[0] : null;
+    const currentCount = (lastDate === today) ? sub.dailySuggestionCount : 0;
+    const limit = SUBSCRIPTION_CONFIG[sub.tier]?.daily_suggestions?.limit || 0;
+    const isAtLimit = !isDevelopment && currentCount >= limit;
+    const limitMessage = SUBSCRIPTION_CONFIG[sub.tier]?.daily_suggestions?.message || "Günlük öneri limitine ulaştınız.";
 
     const sortedMeals = useMemo(() => {
         return [...(recommendations || [])].sort(
@@ -26,8 +39,8 @@ export default function MealRecommendations() {
 
     useEffect(() => {
         const checkAndGenerate = async () => {
-            // Sadece recommendations undefined/null ise veya boş diziyse ve şu an üretim yapılmıyorsa
-            if ((!recommendations || recommendations.length === 0) && !isGenerating) {
+            // Sadece recommendations undefined/null ise veya boş diziyse ve şu an üretim yapılmıyorsa ve limit dolmamışsa
+            if ((!recommendations || recommendations.length === 0) && !isGenerating && !isAtLimit && !sub.loading) {
                 setIsGenerating(true);
                 try {
                     await generate.mutateAsync({ action: "generate_all" });
@@ -40,13 +53,17 @@ export default function MealRecommendations() {
         };
 
         checkAndGenerate();
-    }, []); // Sadece ilk yükleme/bulunmama durumunda tetiklensin
+    }, [recommendations, isGenerating, isAtLimit, sub.loading]); // Bağımlılıklar güncellendi
 
 
 
 
     const handleRefreshAll = async () => {
         if (isGenerating) return;
+        if (isAtLimit) {
+            toast.error(limitMessage);
+            return;
+        }
         setIsGenerating(true);
         try {
             await generate.mutateAsync({ action: "generate_all" });
@@ -57,6 +74,10 @@ export default function MealRecommendations() {
 
     const handleRegenerateSingle = async (mealType: string, oldId?: string | number) => {
         if (isGenerating) return;
+        if (isAtLimit) {
+            toast.error(limitMessage);
+            return;
+        }
         setRegenMealType(mealType);
         setIsGenerating(true);
         try {
@@ -102,13 +123,13 @@ export default function MealRecommendations() {
                     variant="ghost"
                     size="sm"
                     onClick={handleRefreshAll}
-                    disabled={isGenerating}
-                    className=" cursor-pointer text-orange-400 hover:text-orange-300 hover:bg-orange-500/10 text-xs gap-1.5 px-3 disabled:opacity-50"
+                    disabled={isGenerating || (isAtLimit && !isGenerating)}
+                    className={`cursor-pointer text-orange-400 hover:text-orange-300 hover:bg-orange-500/10 text-xs gap-1.5 px-3 disabled:opacity-50 ${isAtLimit ? "grayscale opacity-50" : ""}`}
                 >
                     <RefreshCw
                         className={`w-3.5 h-3.5 ${isGenerating && !regenMealType ? "animate-spin" : ""}`}
                     />
-                    Tümünü Yenile
+                    {isAtLimit ? "Limit Doldu" : "Tümünü Yenile"}
                 </Button>
             </div>
 

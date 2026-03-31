@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
     imageSizes: [32, 64, 96, 256],
     minimumCacheTTL: 14400,
     dangerouslyAllowSVG: false,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+      },
+    ],
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },

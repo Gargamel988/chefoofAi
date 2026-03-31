@@ -22,7 +22,7 @@ function CheckoutContent() {
   return (
     <div className="h-screen bg-zinc-950 flex flex-col pt-20 overflow-hidden">
       {/* Absolute Close Button (Optional but good for UX) - Adjusted for Nav */}
-      <button 
+      <button
         onClick={() => router.push("/pricing")}
         className="fixed top-24 right-4 z-9999 w-10 h-10 bg-black/50 hover:bg-black/80 backdrop-blur-md rounded-full flex items-center justify-center text-white/50 hover:text-white transition-all border border-white/10"
         title="Kapat ve Geri Dön"
@@ -53,8 +53,8 @@ function CheckoutContent() {
           scrolling="auto"
         />
       </div>
-      
-      <Script 
+
+      <Script
         src="https://www.paytr.com/js/iframeResizer.min.js"
         onLoad={() => {
           // @ts-ignore
@@ -71,9 +71,9 @@ function CheckoutContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-        <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center">
-            <Loader2 className="w-10 h-10 text-orange-500 animate-spin" />
-        </div>
+      <div className="fixed inset-0 bg-zinc-950 flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-orange-500 animate-spin" />
+      </div>
     }>
       <CheckoutContent />
     </Suspense>

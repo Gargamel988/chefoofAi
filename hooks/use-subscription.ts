@@ -10,11 +10,15 @@ export function useSubscription() {
     isActive: boolean;
     loading: boolean;
     lastAutoPlanAt: string | null;
+    dailySuggestionCount: number;
+    lastDailySuggestionAt: string | null;
   }>({
     tier: "Free",
     isActive: false,
     loading: true,
     lastAutoPlanAt: null,
+    dailySuggestionCount: 0,
+    lastDailySuggestionAt: null,
   });
 
   const supabase = createClient();
@@ -29,7 +33,7 @@ export function useSubscription() {
 
       const { data: profile } = await supabase
         .from("profiles")
-        .select("subscription_tier, subscription_status, subscription_expiry, last_auto_plan_at")
+        .select("subscription_tier, subscription_status, subscription_expiry, last_auto_plan_at, daily_suggestion_count, last_daily_suggestion_at")
         .eq("id", user.id)
         .single();
 
@@ -43,6 +47,8 @@ export function useSubscription() {
           isActive: (profile.subscription_tier === "Free") || (profile.subscription_status === "active" && !isExpired),
           loading: false,
           lastAutoPlanAt: profile.last_auto_plan_at || null,
+          dailySuggestionCount: profile.daily_suggestion_count || 0,
+          lastDailySuggestionAt: profile.last_daily_suggestion_at || null,
         });
       } else {
         setSubscription(s => ({ ...s, loading: false }));

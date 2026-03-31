@@ -37,14 +37,14 @@ export function DiscoverCard({ post: recipe, index, userId }: DiscoverCardProps)
     const [showComments, setShowComments] = useState(false);
     const [newComment, setNewComment] = useState("");
 
-    const { handleSocialAction, comments, isLoadingComments, addComment, isCommenting, isInteractionActive } = useSocial(recipe.id, userId);
+    const { handleSocialAction, comments, isLoadingComments, addComment, isCommenting, isInteractionActive } = useSocial(recipe.id);
 
     const timeAgo = recipe.created_at
         ? formatDistanceToNow(new Date(recipe.created_at), { addSuffix: true, locale: tr })
         : "yeni";
 
     const handleInteract = async (type: "like" | "save") => {
-        await handleSocialAction(recipe.id, type, userId);
+        await handleSocialAction(recipe.id, type);
     };
 
     const handleAddComment = async (e: React.FormEvent) => {

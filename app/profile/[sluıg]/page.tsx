@@ -6,7 +6,6 @@ import {
     HydrationBoundary,
     QueryClient,
 } from "@tanstack/react-query";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 interface PageProps {

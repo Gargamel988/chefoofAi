@@ -15,6 +15,28 @@ export const metadata = {
     alternates: {
         canonical: "/discover",
     },
+    openGraph: {
+        title: "En Popüler Tarifler ve Şefler | CheFood AI",
+        description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
+        url: "https://chefoodai.com/discover",
+        siteName: "CheFood AI",
+        images: [
+            {
+                url: "https://chefoodai.com/fotochef.webp",
+                width: 1200,
+                height: 630,
+                alt: "CheFood AI - Yapay Zeka Yemek Tarifi Platformu",
+            },
+        ],
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "En Popüler Tarifler ve Şefler | CheFood AI",
+        description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
+        images: ["https://chefoodai.com/fotochef.webp"],
+        creator: "@omerAIdev",
+    },
 };
 
 type User = {

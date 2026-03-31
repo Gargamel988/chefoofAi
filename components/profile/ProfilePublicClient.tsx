@@ -2,6 +2,7 @@
 
 import { useSocial } from "@/hooks/useSocial";
 import { usePublicProfile } from "@/hooks/usePublicProfile";
+import { useProfiles } from "@/hooks/useProfiles";
 import {
     UserPlus,
     UserMinus,
@@ -21,14 +22,20 @@ interface ProfilePublicClientProps {
 }
 
 export default function ProfilePublicClient({ userId }: ProfilePublicClientProps) {
+    const { myProfile } = useProfiles();
     const { profile, recipes } = usePublicProfile(userId);
     const { followStatus, toggleFollow, isFollowing: isTogglingFollow } = useSocial(undefined, userId);
 
     if (!profile) return null;
 
+    const isOwnProfile = myProfile?.id === userId;
     const followerCount = profile.followers_count || 0;
 
     const handleFollowToggle = async () => {
+        if (isOwnProfile) {
+            toast.error("Kendinizi takip edemezsiniz.");
+            return;
+        }
         await toggleFollow(userId);
     };
 

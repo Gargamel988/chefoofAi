@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import GreetingHero from "@/components/home/GreetingHero";
 import FridgeFeature from "@/components/home/FridgeFeature";
@@ -11,7 +9,7 @@ import WeeklyMealPlan from "@/components/home/WeeklyMealPlan";
 import NutritionAnalytics from "@/components/home/NutritionAnalytics";
 import HistoryFavorites from "@/components/home/HistoryFavorites";
 
-import { UserInfo, ORANGE } from "@/components/home/constants";
+import { ORANGE } from "@/components/home/constants";
 import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
 import { getMyProfile } from "@/services/profiles";
 import { GetDailyConsumedCalories } from "@/services/meals";

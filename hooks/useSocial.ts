@@ -46,19 +46,17 @@ export function useSocial(recipeId?: string, targetUserId?: string) {
   const interactionMutation = useMutation({
     mutationFn: ({
       id,
-      userId,
       type,
     }: {
       id: string;
-      userId: string;
       type: "like" | "save";
-    }) => ToggleRecipeInteraction(id, userId, type),
+    }) => ToggleRecipeInteraction(id, type),
     onMutate: async (vars) => {
       // Interactions update
-      await queryClient.cancelQueries({ queryKey: ["interactions", vars.id, vars.userId] });
-      const prevInteractions = queryClient.getQueryData<string[]>(["interactions", vars.id, vars.userId]);
+      await queryClient.cancelQueries({ queryKey: ["interactions", vars.id] });
+      const prevInteractions = queryClient.getQueryData<string[]>(["interactions", vars.id]);
 
-      queryClient.setQueryData<string[]>(["interactions", vars.id, vars.userId], (old = []) => {
+      queryClient.setQueryData<string[]>(["interactions", vars.id], (old = []) => {
         if (old.includes(vars.type)) {
           return old.filter(t => t !== vars.type);
         }
@@ -87,11 +85,11 @@ export function useSocial(recipeId?: string, targetUserId?: string) {
     onSuccess: (data, vars) => {
       queryClient.invalidateQueries({ queryKey: ["feed"] });
       queryClient.invalidateQueries({ queryKey: ["recipes", vars.id] });
-      queryClient.invalidateQueries({ queryKey: ["interactions", vars.id, vars.userId] });
+      queryClient.invalidateQueries({ queryKey: ["interactions", vars.id] });
     },
     onError: (err: any, vars, context) => {
       if (context?.prevInteractions) {
-        queryClient.setQueryData(["interactions", vars.id, vars.userId], context.prevInteractions);
+        queryClient.setQueryData(["interactions", vars.id], context.prevInteractions);
       }
       if (context?.prevRecipe && vars.type === "like") {
         queryClient.setQueryData(["recipes", vars.id], context.prevRecipe);
@@ -106,6 +104,7 @@ export function useSocial(recipeId?: string, targetUserId?: string) {
       queryClient.invalidateQueries({ queryKey: ["follow_status"] });
       queryClient.invalidateQueries({ queryKey: ["creators"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["public_profile"] });
     },
     onError: (err: any) => {
       toast.error(translateSupabaseError(err.message));
@@ -138,15 +137,9 @@ export function useSocial(recipeId?: string, targetUserId?: string) {
   const handleAction = async (
     id: string,
     type: "like" | "save",
-    customUserId?: string,
   ) => {
     try {
-      const uid = customUserId || targetUserId;
-      if (!uid) {
-        toast.error("Giriş yapmanız gerekiyor.");
-        return;
-      }
-      await interactionMutation.mutateAsync({ id, userId: uid, type });
+      await interactionMutation.mutateAsync({ id, type });
     } catch (err: any) {
       toast.error(translateSupabaseError(err.message));
     }

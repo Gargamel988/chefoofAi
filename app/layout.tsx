@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon1.png",
   },
-  metadataBase: new URL("https://chefoodai.vercel.app"),
+  metadataBase: new URL("https://chefoodai.com"),
   description:
     "Yapay zeka destekli tarif platformunda hızlı ve lezzetli yemek tarifleri keşfedin. Malzemelerinizi girin, size özel tarifler oluşturalım. Ücretsiz AI yemek asistanı.",
   keywords: [
@@ -63,14 +63,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "tr_TR",
-    url: "https://chefoodai.vercel.app",
+    url: "https://chefoodai.com",
     title: "CheFood AI - Yapay Zeka Destekli Yemek Tarifleri",
     description:
       "Yapay zeka ile özel yemek tarifleri oluşturun. Malzemelerinizi girin, adım adım tarifler alın. Ücretsiz ve kolay kullanım.",
     siteName: "CheFood AI",
     images: [
       {
-        url: "https://chefoodai.vercel.app/fotochef.webp", // Mutlak URL
+        url: "https://chefoodai.com/fotochef.webp", // Mutlak URL
         width: 1200,
         height: 630,
         alt: "CheFood AI - Yapay Zeka Yemek Tarifi Platformu",
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     title: "CheFood AI - Yapay Zeka Destekli Yemek Tarifleri",
     description:
       "Yapay zeka ile özel yemek tarifleri oluşturun. Malzemelerinizi girin, adım adım tarifler alın.",
-    images: ["https://chefoodai.vercel.app/fotochef.webp"], // Mutlak URL
+    images: ["https://chefoodai.com/fotochef.webp"],
     creator: "@omerAIdev",
   },
   robots: {
