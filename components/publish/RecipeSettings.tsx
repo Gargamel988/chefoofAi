@@ -30,7 +30,6 @@ export default function RecipeSettings({ settings, onChange }: RecipeSettingsPro
   const handleChange = (key: string, value: any) => {
     onChange({ ...settings, [key]: value });
   };
-  console.log(settings);
 
   return (
     <div className="space-y-10">

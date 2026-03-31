@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       user.user_metadata?.full_name || user.email || "Kullanıcı";
 
     const user_basket = Buffer.from(
-      JSON.stringify([[name, (amount / 100).toString(), 1]]),
+      JSON.stringify([[name, (amount / 100).toFixed(2), 1]]),
     ).toString("base64");
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
       user_basket,
       user_ip,
       lang: "tr",
+      iframe_v2: "1",
     };
 
     const result = await getPayTRToken(params);

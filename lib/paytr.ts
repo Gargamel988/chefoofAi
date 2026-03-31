@@ -31,6 +31,7 @@ export interface PayTRPaymentParams {
   no_installment?: number;
   max_installment?: number;
   lang?: 'tr' | 'en';
+  iframe_v2?: string;
 }
 
 export interface PayTRSubscriptionParams {
@@ -71,7 +72,7 @@ export const getPayTRToken = async (params: PayTRPaymentParams) => {
   formData.append('payment_amount', params.payment_amount.toString());
   formData.append('paytr_token', paytrToken);
   formData.append('user_basket', params.user_basket);
-  formData.append('debug_on', debug_on.toString());
+  formData.append('debug_on', '1');
   formData.append('no_installment', no_installment.toString());
   formData.append('max_installment', max_installment.toString());
   formData.append('user_name', params.user_name);
@@ -83,6 +84,7 @@ export const getPayTRToken = async (params: PayTRPaymentParams) => {
   formData.append('currency', currency);
   formData.append('test_mode', testMode);
   formData.append('lang', lang);
+  formData.append('iframe_v2', params.iframe_v2 || '1');
 
   const response = await fetch('https://www.paytr.com/odeme/api/get-token', {
     method: 'POST',

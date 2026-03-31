@@ -115,7 +115,7 @@ export default function LivePreview({ recipe, user }: LivePreviewProps) {
                                         {recipe.difficulty && (
                                             <div className="bg-black/40 backdrop-blur-xl px-4 py-2 rounded-2xl flex items-center gap-2 border border-white/10 shadow-2xl">
                                                 <div className={`w-1.5 h-1.5 rounded-full ${recipe.difficulty === 'easy' ? 'bg-green-500' :
-                                                        recipe.difficulty === 'hard' ? 'bg-red-500' : 'bg-orange-500'
+                                                    recipe.difficulty === 'hard' ? 'bg-red-500' : 'bg-orange-500'
                                                     } animate-pulse`} />
                                                 <span className="text-[10px] font-black uppercase tracking-widest text-white">
                                                     {recipe.difficulty === 'easy' ? 'Kolay' :
