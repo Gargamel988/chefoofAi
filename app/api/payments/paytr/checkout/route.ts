@@ -52,7 +52,9 @@ export async function POST(req: NextRequest) {
     const user_name =
       user.user_metadata?.full_name || user.email || "Kullanıcı";
 
-    const user_basket = JSON.stringify([[name, (amount / 100).toString(), 1]]);
+    const user_basket = Buffer.from(
+      JSON.stringify([[name, (amount / 100).toString(), 1]]),
+    ).toString("base64");
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
     const params: PayTRPaymentParams = {

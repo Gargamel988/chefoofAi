@@ -20,7 +20,7 @@ function CheckoutContent() {
   if (!token) return null;
 
   return (
-    <div className="h-screen bg-zinc-950 flex flex-col pt-20 overflow-hidden">
+    <div className="h-screen bg-zinc-950 flex flex-col pt-20 ">
       {/* Absolute Close Button (Optional but good for UX) - Adjusted for Nav */}
       <button
         onClick={() => router.push("/pricing")}
@@ -43,7 +43,7 @@ function CheckoutContent() {
         </div>
       )}
 
-      <div className="flex-1 w-full h-[calc(100vh-80px)] relative">
+      <div className="flex-1 w-full h-screen ">
         <iframe
           src={`https://www.paytr.com/odeme/guvenli/${token}`}
           id="paytriframe"
