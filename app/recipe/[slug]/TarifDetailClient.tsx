@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRecipeByIdWithAuth, GetRecipeBySlug } from "@/services/recipes";
 import { createClient } from "@/lib/supabase/client";
 import { useProfiles } from "@/hooks/useProfiles";
+import AdBanner from "@/components/AdBanner";
 
 interface RecipeContent {
     difficulty?: string;
@@ -130,11 +131,28 @@ export default function TarifDetailClient({
 
             <RecipeQuickStats times={times} />
 
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                <AdBanner slot="8136351407" className="mt-4" />
+            </div>
+
             <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pb-24">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-8">
                         <RecipeIngredients ingredients={ingredients} servings={content.servings} />
-                        <RecipeSteps steps={steps} />
+                        
+                        {/* Recipe Steps with Intra-Ad */}
+                        {steps.length > 2 ? (
+                            <>
+                                <RecipeSteps steps={steps.slice(0, 2)} />
+                                <div className="py-4 border-y border-zinc-800/50 my-4">
+                                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest mb-2 text-center">Reklam</p>
+                                    <AdBanner slot="7629190141" format="fluid" />
+                                </div>
+                                <RecipeSteps steps={steps.slice(2)} startOffset={2} />
+                            </>
+                        ) : (
+                            <RecipeSteps steps={steps} />
+                        )}
                     </div>
 
                     <div className="space-y-6">

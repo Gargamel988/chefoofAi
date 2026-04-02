@@ -8,6 +8,7 @@ import MealRecommendations from "@/components/home/MealRecommendations";
 import WeeklyMealPlan from "@/components/home/WeeklyMealPlan";
 import NutritionAnalytics from "@/components/home/NutritionAnalytics";
 import HistoryFavorites from "@/components/home/HistoryFavorites";
+import AdBanner from "@/components/AdBanner";
 
 import { ORANGE } from "@/components/home/constants";
 import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
@@ -53,6 +54,11 @@ export default async function HomePage() {
           <GreetingHero />
         </Suspense>
       </HydrationBoundary>
+
+      {/* ADSENSE BANNER */}
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <AdBanner slot="8136351407" />
+      </div>
 
       {/* 2. FRIDGE FEATURE (PRIMARY ACTION) */}
       <FridgeFeature />

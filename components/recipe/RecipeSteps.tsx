@@ -8,7 +8,7 @@ interface Step {
     durationMinutes?: number;
 }
 
-export function RecipeSteps({ steps }: { steps: Step[] }) {
+export function RecipeSteps({ steps, startOffset = 0 }: { steps: Step[], startOffset?: number }) {
     if (!steps.length) return null;
 
     return (
@@ -36,7 +36,7 @@ export function RecipeSteps({ steps }: { steps: Step[] }) {
                         {/* Step number */}
                         <div className="flex flex-col items-center shrink-0">
                             <div className="w-9 h-9 rounded-2xl flex items-center justify-center font-black text-sm border border-zinc-700 bg-zinc-800 group-hover:border-orange-500/50 group-hover:bg-orange-500/10 group-hover:text-orange-400 text-zinc-400 transition-all duration-300">
-                                {i + 1}
+                                {i + 1 + startOffset}
                             </div>
                             {i < steps.length - 1 && (
                                 <div className="w-px flex-1 mt-2 bg-linear-to-b from-zinc-700/60 to-transparent min-h-6" />
