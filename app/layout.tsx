@@ -7,7 +7,6 @@ import { Toaster } from "sonner";
 import { Header } from "@/components/header-2";
 import { NavWrapper } from "@/provider/nav-wrapper";
 import HoverFooter from "@/components/footer";
-import Script from "next/script";
 import { createClient } from "@/lib/supabase/server";
 import { getMyProfile } from "@/services/profiles";
 
@@ -124,7 +123,7 @@ export default async function RootLayout({
     "@type": "WebApplication",
     name: "CheFood AI",
     description: "Yapay zeka destekli yemek tarifi platformu",
-    url: "https://chefoodai.vercel.app",
+    url: "https://chefoodai.com",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web",
     offers: {
@@ -143,8 +142,8 @@ export default async function RootLayout({
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "CheFood AI",
-    url: "https://chefoodai.vercel.app",
-    logo: "https://chefoodai.vercel.app/fotochef.webp",
+    url: "https://chefoodai.com",
+    logo: "https://chefoodai.com/fotochef.webp",
     sameAs: ["https://x.com/omerAIdev"],
   };
 
@@ -153,12 +152,8 @@ export default async function RootLayout({
       <head>
         <JsonLd data={jsonLdApp} />
         <JsonLd data={jsonLdOrg} />
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1444133443338193"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {/* AdSense Verification Script - Using standard script for crawler visibility */}
+
       </head>
 
       <body className={`${interFont.className} flex flex-col min-h-screen dark antialiased`}>
