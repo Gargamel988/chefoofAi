@@ -153,6 +153,8 @@ export default async function RootLayout({
       <head>
         <JsonLd data={jsonLdApp} />
         <JsonLd data={jsonLdOrg} />
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1444133443338193"
+          crossorigin="anonymous"></Script>
       </head>
 
       <body className={`${interFont.className} flex flex-col min-h-screen dark antialiased`}>
