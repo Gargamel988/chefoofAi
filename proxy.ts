@@ -48,6 +48,7 @@ export async function proxy(request: NextRequest) {
     "/icon",
     "/robots.txt",
     "/sitemap.xml",
+    "/ads.txt",
   ];
   const isPublicPage =
     pathname === "/" ||
