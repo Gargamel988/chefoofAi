@@ -50,6 +50,8 @@ export async function proxy(request: NextRequest) {
     "/sitemap.xml",
     "/ads.txt",
     "/api/payments/paytr/callback",
+    "/privacy-policy",
+    "/terms-of-service",
   ];
   const isPublicPage =
     pathname === "/" ||

@@ -23,8 +23,8 @@ function HoverFooter() {
         {
             title: "Yasal",
             links: [
-                { label: "Gizlilik Politikası", href: "#" },
-                { label: "Kullanım Şartları", href: "#" },
+                { label: "Gizlilik Politikası", href: "/privacy-policy" },
+                { label: "Kullanım Şartları", href: "/terms-of-service" },
             ],
         },
     ];
