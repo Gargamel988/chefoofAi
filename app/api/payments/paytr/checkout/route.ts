@@ -48,7 +48,8 @@ export async function POST(req: NextRequest) {
     const userIdClean = user.id.replace(/-/g, "");
     const merchant_oid = `${userIdClean}${periodInitial}${Date.now()}`;
 
-    const user_ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
+    const forwardedFor = req.headers.get("x-forwarded-for");
+    const user_ip = forwardedFor ? forwardedFor.split(',')[0].trim() : "127.0.0.1";
     const user_name =
       user.user_metadata?.full_name || user.email || "Kullanıcı";
 

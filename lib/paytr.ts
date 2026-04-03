@@ -9,10 +9,10 @@ interface PayTRConfig {
 
 const getConfig = (): PayTRConfig => {
   return {
-    merchantId: process.env.PAYTR_MERCHANT_ID || '',
-    merchantKey: process.env.PAYTR_MERCHANT_KEY || '',
-    merchantSalt: process.env.PAYTR_MERCHANT_SALT || '',
-    testMode: process.env.NEXT_PUBLIC_PAYTR_TEST_MODE || '1',
+    merchantId: (process.env.PAYTR_MERCHANT_ID || '').trim(),
+    merchantKey: (process.env.PAYTR_MERCHANT_KEY || '').trim(),
+    merchantSalt: (process.env.PAYTR_MERCHANT_SALT || '').trim(),
+    testMode: (process.env.NEXT_PUBLIC_PAYTR_TEST_MODE || '1').trim(),
   };
 };
 

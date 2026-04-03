@@ -11,6 +11,8 @@ export default function sitemap() {
     "/recipe",
     "/weekly-plan",
     "/whatever-cook",
+    "/privacy-policy",
+    "/terms-of-service",
   ];
 
   return routes.map((route) => ({
