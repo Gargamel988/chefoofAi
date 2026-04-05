@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Kullanım Şartları | CheFood AI',
   description: 'CheFood AI platformunu kullanırken uymanız gereken kurullar burada listelenmiştir.',
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
   alternates: { canonical: '/terms-of-service' },
 };
 
@@ -11,7 +11,7 @@ export default function TermsOfService() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-24 text-zinc-300 space-y-8">
       <h1 className="text-4xl font-bold text-white mb-10">Kullanım Şartları</h1>
-      
+
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold text-orange-500">1. Kabul</h2>
         <p>

@@ -6,11 +6,12 @@ export default function Robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/profile/", "/onboarding/", "/publish/"],
+        disallow: ["/api/", "/profile/", "/onboarding/", "/publish/", "/checkout/"],
       },
       {
         userAgent: "Mediapartners-Google",
         allow: "/",
+        disallow: ["/api/", "/profile/", "/onboarding/", "/publish/", "/checkout/"],
       },
     ],
     sitemap: "https://chefoodai.com/sitemap.xml",

@@ -21,6 +21,7 @@ const interFont = Inter({
 });
 
 import JsonLd from "@/components/JsonLd";
+import AdSenseScript from "@/components/adsense-script";
 
 export const metadata: Metadata = {
   title: {
@@ -154,13 +155,7 @@ export default async function RootLayout({
         <JsonLd data={jsonLdApp} />
         <JsonLd data={jsonLdOrg} />
         {/* AdSense Verification Script - Using standard script for crawler visibility */}
-        <Script
-          id="adsense-init"
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1444133443338193"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        <AdSenseScript />
       </head>
 
       <body className={`${interFont.className} flex flex-col min-h-screen dark antialiased`}>
