@@ -25,24 +25,31 @@ export async function GetNutritionAnalytics(): Promise<NutritionStats> {
   // Actually, we should check which table is being used for "today's consumed" 
   // Based on previous work, daily_recommendations is used for the daily view.
   
-  const { data: recommendations } = await supabase
-    .from("daily_recommendations")
-    .select(`
-      is_consumed,
-      recipes (
-        calories,
-        protein,
-        carbs,
-        fat
-      )
-    `)
-    .eq("user_id", user.id)
-    .eq("is_consumed", true)
-    .gte("date", monday.toISOString().split("T")[0]);
+  // Parallel fetching of recommendations and profile goal
+  const [recommendationsRes, profileRes] = await Promise.all([
+    supabase
+      .from("daily_recommendations")
+      .select(`
+        is_consumed,
+        recipes (
+          calories,
+          protein,
+          carbs,
+          fat
+        )
+      `)
+      .eq("user_id", user.id)
+      .eq("is_consumed", true)
+      .gte("date", monday.toISOString().split("T")[0]),
+    supabase
+      .from("profiles")
+      .select("goal")
+      .eq("id", user.id)
+      .single()
+  ]);
 
-  // Also check weekly plan items for the current week
-  // (Assuming weekly plan items also have a date or we just use the current week's setup)
-  // For simplicity, let's aggregate daily_recommendations first as it's the most common "history" source.
+  const recommendations = recommendationsRes.data;
+  const profile = profileRes.data;
 
   let totals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
@@ -55,13 +62,6 @@ export async function GetNutritionAnalytics(): Promise<NutritionStats> {
       totals.fat += r.fat || 0;
     }
   });
-
-  // Get target from profile
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("goal")
-    .eq("id", user.id)
-    .single();
 
   // Simple heuristic for target calories if not set
   let target = 2000;

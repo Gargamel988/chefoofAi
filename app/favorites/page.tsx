@@ -7,11 +7,14 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import LoadingScreen from "../loading";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = buildPageMetadata({
     title: "Favorilerim",
     description: "Kaydettiğiniz ve daha sonra pişirmek istediğiniz tüm tarifler.",
-};
+    path: "/favorites",
+    noIndex: true,
+});
 
 export default async function FavoritesPage() {
     const queryClient = new QueryClient();

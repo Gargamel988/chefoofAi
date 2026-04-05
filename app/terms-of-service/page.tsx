@@ -1,11 +1,24 @@
 import { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: 'Kullanım Şartları | CheFood AI',
   description: 'CheFood AI platformunu kullanırken uymanız gereken kurullar burada listelenmiştir.',
-  robots: { index: true, follow: true },
-  alternates: { canonical: '/terms-of-service' },
-};
+  path: '/terms-of-service',
+  keywords: [
+    "chefood ai kullanım şartları",
+    "gizlilik politikası",
+    "veri güvenliği",
+    "çerez politikası",
+    "kişisel verilerin korunması",
+    "gizlilik sözleşmesi",
+    "ai yemek asistanı gizlilik",
+    "tarif platformu gizlilik",
+    "ödemeler ve güvenlik",
+    "veri koruma",
+    "gizlilik politikası",
+  ],
+});
 
 export default function TermsOfService() {
   return (

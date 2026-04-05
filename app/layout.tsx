@@ -10,6 +10,10 @@ import { NavWrapper } from "@/provider/nav-wrapper";
 import HoverFooter from "@/components/footer";
 import { createClient } from "@/lib/supabase/server";
 import { getMyProfile } from "@/services/profiles";
+import JsonLd from "@/components/JsonLd";
+import AdSenseScript from "@/components/adsense-script";
+import { rootMetadata } from "@/lib/seo";
+import CookieConsent from "@/components/CookieConsent";
 
 // Font optimizasyonu - sadece gerekli ağırlıklar
 const interFont = Inter({
@@ -20,86 +24,9 @@ const interFont = Inter({
   variable: "--font-inter",
 });
 
-import JsonLd from "@/components/JsonLd";
-import AdSenseScript from "@/components/adsense-script";
+export const metadata = rootMetadata;
 
-export const metadata: Metadata = {
-  title: {
-    default: "CheFood AI | Yapay Zeka Destekli Yemek Tarifleri",
-    template: "%s | CheFood AI",
-  },
-  icons: {
-    icon: "/icon1.png",
-  },
-  metadataBase: new URL("https://chefoodai.com"),
-  description:
-    "Yapay zeka destekli tarif platformunda hızlı ve lezzetli yemek tarifleri keşfedin. Malzemelerinizi girin, size özel tarifler oluşturalım. Ücretsiz AI yemek asistanı.",
-  keywords: [
-    "yapay zeka yemek tarifi",
-    "ai tarif asistanı",
-    "online yemek tarifleri",
-    "kolay yemek tarifleri",
-    "hızlı tarifler",
-    "malzeme bazlı tarif",
-    "yemek nasıl yapılır",
-    "türk mutfağı tarifleri",
-    "dünya mutfağı",
-    "pratik tarifler",
-  ],
-  authors: [{ name: "Ömer Aydın" }],
-  creator: "Ömer Aydın",
-  publisher: "CheFood AI",
-  alternates: {
-    canonical: "/",
-    languages: {
-      "tr-TR": "/tr",
-      "en-US": "/en",
-      "de-DE": "/de",
-      "x-default": "/",
-    },
-  },
-  verification: {
-    google: "ZthQntL_bdSYhNe74uXr_tQKIEr4K-gQwem01txYEPs",
-  },
-  openGraph: {
-    type: "website",
-    locale: "tr_TR",
-    url: "https://chefoodai.com",
-    title: "CheFood AI - Yapay Zeka Destekli Yemek Tarifleri",
-    description:
-      "Yapay zeka ile özel yemek tarifleri oluşturun. Malzemelerinizi girin, adım adım tarifler alın. Ücretsiz ve kolay kullanım.",
-    siteName: "CheFood AI",
-    images: [
-      {
-        url: "https://chefoodai.com/fotochef.webp", // Mutlak URL
-        width: 1200,
-        height: 630,
-        alt: "CheFood AI - Yapay Zeka Yemek Tarifi Platformu",
-        type: "image/webp",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "CheFood AI - Yapay Zeka Destekli Yemek Tarifleri",
-    description:
-      "Yapay zeka ile özel yemek tarifleri oluşturun. Malzemelerinizi girin, adım adım tarifler alın.",
-    images: ["https://chefoodai.com/fotochef.webp"],
-    creator: "@omerAIdev",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: false,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-};
+
 
 export default async function RootLayout({
   children,
@@ -134,8 +61,8 @@ export default async function RootLayout({
       priceCurrency: "TRY",
     },
     creator: {
-      "@type": "Person",
-      name: "Ömer Aydın",
+      "@type": "Organization",
+      name: "Hatay yazılım",
     },
     inLanguage: "tr-TR",
   };
@@ -154,6 +81,7 @@ export default async function RootLayout({
       <head>
         <JsonLd data={jsonLdApp} />
         <JsonLd data={jsonLdOrg} />
+
         {/* AdSense Verification Script - Using standard script for crawler visibility */}
         <AdSenseScript />
       </head>
@@ -172,6 +100,7 @@ export default async function RootLayout({
             <HoverFooter />
           </NavWrapper>
           <Toaster />
+          <CookieConsent />
         </Queryclientprovider>
       </body>
     </html>

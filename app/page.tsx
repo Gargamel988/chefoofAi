@@ -15,20 +15,26 @@ import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query
 import { getMyProfile } from "@/services/profiles";
 import { GetDailyConsumedCalories } from "@/services/meals";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Ana Sayfa | CheFood AI",
   description: "Yapay zeka destekli en lezzetli yemek tariflerini keşfedin. Kendi malzemelerinizle anında yeni tarifler oluşturun.",
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "CheFood AI - Yapay Zeka Yemek Asistanı",
-    description: "Kendi malzemelerinizle anında lezzetli yemek tarifleri oluşturun.",
-    images: [{ url: "/og?title=CheFood AI&description=Lezzetli Yemeklerin Yapay Zeka Adresi" }],
-  },
-};
+  path: "/",
+  keywords: [
+    "yemek tarifleri",
+    "yapay zeka yemek",
+    "ai yemek asistanı",
+    "kolay tarifler",
+    "pratik yemekler",
+    "mutfak asistanı",
+    "yemek önerileri",
+    "tarif bulucu",
+    "yemek planı",
+    "sağlıklı tarifler",
+    "chefood ai",
+  ],
+});
 
 export default async function HomePage() {
   const queryClient = new QueryClient();

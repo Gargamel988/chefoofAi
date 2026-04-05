@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClientForStatic } from "@/lib/supabase/server";
+import { MetadataRoute } from "next";
 
-export default async function sitemap() {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://chefoodai.com";
   const lastModified = new Date();
 
@@ -9,7 +10,6 @@ export default async function sitemap() {
     "",
     "/auth",
     "/discover",
-    "/favorites",
     "/pricing",
     "/weekly-plan",
     "/whatever-cook",
@@ -26,7 +26,7 @@ export default async function sitemap() {
 
   // Dinamik tarif rotaları
   try {
-    const supabase = await createClient();
+    const supabase = await createClientForStatic();
     const { data: recipes } = await supabase
       .from("recipes")
       .select("slug, updated_at")
@@ -39,7 +39,7 @@ export default async function sitemap() {
           ? new Date(recipe.updated_at)
           : lastModified,
         changeFrequency: "weekly" as const,
-        priority: 0.6,
+        priority: 0.7,
       }));
 
       return [...staticMaps, ...recipeMaps];

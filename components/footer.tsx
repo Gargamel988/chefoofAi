@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { FooterBackgroundGradient } from "@/components/hover-footer";
 import { TextHoverEffect } from "@/components/hover-footer";
+import Link from "next/link";
 
 function HoverFooter() {
     // Footer link data
@@ -124,16 +125,17 @@ function HoverFooter() {
                     {/* Social icons */}
                     <div className="flex space-x-6 text-gray-400">
                         {socialLinks.map(({ icon, label, href }) => (
-                            <a
+                            <Link
                                 key={label}
                                 href={href}
-                                aria-label={label}
+                                aria-label={`${label} profilimi ziyaret et (yeni sekmede açılır)`}
                                 className="hover:text-orange-500 transition-colors z-30"
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 title={label}
                             >
                                 {icon}
-                            </a>
+                            </Link>
                         ))}
                     </div>
 

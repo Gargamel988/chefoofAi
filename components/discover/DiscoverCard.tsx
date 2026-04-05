@@ -58,7 +58,7 @@ export function DiscoverCard({ post: recipe, index, userId }: DiscoverCardProps)
             <article className="group flex flex-col bg-transparent mb-2 sm:mb-6 w-full">
                 {/* Header: User Info & Options */}
                 <header className="flex items-center justify-between py-3 px-4 sm:px-1">
-                    <Link href={`/profile/${recipe.profiles?.id}`} className="cursor-pointer flex items-center gap-3">
+                    <Link href={`/users/${recipe.profiles?.id}`} className="cursor-pointer flex items-center gap-3">
                         <Avatar className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-zinc-800">
                             <AvatarImage src={getSafePublicUrl(recipe.profiles?.avatar_url || "")} className="rounded-full object-cover" />
                             <AvatarFallback className="bg-zinc-900 font-bold text-zinc-400">

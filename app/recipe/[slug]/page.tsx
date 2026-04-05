@@ -1,4 +1,4 @@
-import { GetRecipeBySlug } from "@/services/recipes";
+import { GetRecipeBySlug, GetAllRecipeSlugs } from "@/services/recipes";
 import TarifDetailClient from "./TarifDetailClient";
 import { notFound } from "next/navigation";
 import {
@@ -8,63 +8,84 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import LoadingScreen from "@/app/loading";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createClientForStatic } from "@/lib/supabase/server";
+import { buildArticleMetadata } from "@/lib/seo";
+import { formatISO, parseISO } from "date-fns";
 
 type Props = {
     params: Promise<{ slug: string }>;
 };
 
-// Dinamik Metadata üretimi - Kural 1
+// Next.js 15+ generateMetadata
 export async function generateMetadata(
-    { params }: Props,
-    parent: ResolvingMetadata
+    { params }: Props
 ): Promise<Metadata> {
     const slug = (await params).slug;
-    const { data: recipe } = await GetRecipeBySlug(slug);
+    const staticClient = await createClientForStatic();
+    const { data: recipe } = await GetRecipeBySlug(slug, staticClient);
 
-    if (!recipe) {
-        return {
-            title: "Tarif Bulunamadı",
-        };
-    }
+    if (!recipe) return {};
 
-    const previousImages = (await parent).openGraph?.images || [];
+    // Format ISO dates for article metadata
+    const publishedTime = formatISO(parseISO(recipe.created_at));
 
-    return {
+    return buildArticleMetadata({
         title: `${recipe.title} Tarifi`,
         description: recipe.description || `${recipe.title} nasıl yapılır? En lezzetli ve pratik ${recipe.title} tarifi CheFood AI'da.`,
-        alternates: {
-            canonical: `/recipe/${slug}`,
-        },
-        openGraph: {
-            title: `${recipe.title} Tarifi - CheFood AI`,
-            description: recipe.description,
-            images: [
-                {
-                    url: `/og?title=${encodeURIComponent(recipe.title)}&description=${encodeURIComponent(recipe.description || "")}`,
-                    width: 1200,
-                    height: 630,
-                    alt: recipe.title,
-                },
-                ...previousImages,
-            ],
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: `${recipe.title} Tarifi`,
-            description: recipe.description,
-            images: [`/og?title=${encodeURIComponent(recipe.title)}&description=${encodeURIComponent(recipe.description || "")}`],
-        },
-    };
+        path: `/recipe/${slug}`,
+        image: recipe.cover_image ? { url: recipe.cover_image, alt: recipe.title } : undefined,
+        publishedTime,
+        modifiedTime: publishedTime,
+        authors: [recipe.profiles?.name || "CheFood AI"],
+        keywords: [
+            recipe.title,
+            "yapay zeka yemek tarifi",
+            recipe.meal_type || "yemek tarifi",
+            "kolay tarifler",
+        ],
+    });
 }
 
-// Statik Parametre üretimi - Kural 3
+// SSG for all recipes
 export async function generateStaticParams() {
-    // Burada tüm slugları çekip dönebiliriz. Şimdilik boş bırakıyorum veya popüler olanları ekleyebiliriz.
-    // Gerçek bir uygulamada veritabanından slug listesi çekilir.
-    return [];
+    const staticClient = await createClientForStatic();
+    const slugs = await GetAllRecipeSlugs(staticClient);
+    return slugs.map((item: { slug: string }) => ({
+        slug: item.slug,
+    }));
+}
+
+function generateRecipeJsonLd(recipe: any) {
+    return {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        headline: recipe.title,
+        name: recipe.title,
+        description: recipe.description,
+        image: recipe.cover_image || `https://chefoodai.com/logo.webp`,
+        datePublished: recipe.created_at,
+        dateModified: recipe.updated_at || recipe.created_at,
+        author: {
+            "@type": "Person",
+            name: recipe.profiles?.name || "CheFood AI",
+            url: `https://chefoodai.com/users/${recipe.slug}`,
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "CheFood AI",
+            url: "https://chefoodai.com",
+            logo: {
+                "@type": "ImageObject",
+                url: "https://chefoodai.com/logo.webp",
+            },
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://chefoodai.com/recipe/${recipe.slug}`,
+        },
+    };
 }
 
 export default async function TarifPage({
@@ -77,52 +98,44 @@ export default async function TarifPage({
 
     const queryClient = new QueryClient();
 
+    const staticClient = await createClientForStatic();
+
     // Prefetch recipe
     const recipe = await queryClient.fetchQuery({
         queryKey: ["recipe", slug],
         queryFn: async () => {
-            const { data, error } = await GetRecipeBySlug(slug);
+            const { data, error } = await GetRecipeBySlug(slug, staticClient);
             if (error) throw error;
             return data;
         },
     }).catch(err => {
-        console.error("Recipe skip prefetch error:", err);
+        console.error("Recipe prefetch error:", err);
         return null;
     });
 
-
     if (!recipe) {
-        console.error("Tarif bulunamadı:", slug);
         notFound();
     }
 
-    const supabase = await createClient();
-    const { data: user } = await supabase.auth.getUser();
-    const userId = user?.user?.id;
+    let userId: string | undefined = undefined;
+    try {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        userId = user?.id;
+    } catch (e) {
+        // Build time or no session
+    }
 
     // AI tariflerinde recipe_content alanı kullanılıyor, manuel olanlarda content.
-    // TarifDetailClient 'content' prop'unu beklediği için normalize ediyoruz.
     const normalizedRecipe = {
         ...recipe,
         content: recipe.recipe_content || recipe.content || {},
     };
 
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "Recipe",
-        name: recipe.title,
-        description: recipe.description,
-        author: {
-            "@type": "Person",
-            name: "CheFood AI",
-        },
-        image: `https://chefoodai.vercel.app/og?title=${encodeURIComponent(recipe.title)}`,
-        recipeYield: "1 porsiyon",
-    };
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <JsonLd data={jsonLd} />
+            <JsonLd data={generateRecipeJsonLd(normalizedRecipe)} />
             <Suspense fallback={<LoadingScreen />}>
                 <TarifDetailClient recipe={normalizedRecipe} userId={userId} />
             </Suspense>

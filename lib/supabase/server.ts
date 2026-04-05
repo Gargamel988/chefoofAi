@@ -1,6 +1,20 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+// Simplified client for build-time (Static Site Generation)
+export async function createClientForStatic() {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() { return []; },
+        setAll() { /* no-op at build time */ },
+      },
+    },
+  );
+}
+
 export async function createClient() {
   const cookieStore = await cookies();
 

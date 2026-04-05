@@ -1,8 +1,25 @@
 import { GetRecipeById } from "@/services/recipes";
 import { createClient } from "@/lib/supabase/server";
 import { notFound, redirect } from "next/navigation";
-
 import Publisher from "@/components/publish/Publisher";
+import { buildPageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
+
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+    params,
+}: PageProps): Promise<Metadata> {
+    const { id } = await params;
+    return buildPageMetadata({
+        title: `Tarifi Düzenle | CheFood AI`,
+        description: `Tarifinizi düzenleyin ve topluluğumuzla paylaşın.`,
+        path: `/publish/${id}`,
+        noIndex: true,
+    });
+}
 
 export default async function PublishPage({
     params,

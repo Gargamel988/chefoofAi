@@ -1,4 +1,12 @@
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Kişisel Şefinizi Oluşturun | CheFood AI",
+    description: "Yapay zeka asistanınızla mutfak deneyiminizi kişiselleştirin. Tercihlerinizi ve tarzınızı belirleyin.",
+    path: "/onboarding",
+    noIndex: true,
+});
 
 export default function OnboardingPage() {
     return (

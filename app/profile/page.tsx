@@ -7,11 +7,14 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import LoadingScreen from "@/app/loading";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-    title: "Profilim",
-    description: "Profil bilgilerinizi ve yemek tercihlerinizi yönetin.",
-};
+export const metadata = buildPageMetadata({
+    title: "Profilim | CheFood AI",
+    description: "Kişisel profil bilgilerinizi, mutfak tercihlerinizi ve hesap ayarlarınızı buradan yönetin.",
+    path: "/profile",
+    noIndex: true,
+});
 
 export default async function ProfilePage() {
     const queryClient = new QueryClient();

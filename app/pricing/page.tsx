@@ -1,40 +1,24 @@
 import { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import PricingClient from "@/components/pricing/PricingClient";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
     title: "Fiyatlandırma | CheFood AI",
     description: "CheFood AI Pro ve Premium planları ile beslenme düzeninizi yapay zeka ile profesyonel bir seviyeye taşıyın. Size özel haftalık planlar ve sınırsız tarif üretimi.",
-    alternates: {
-        canonical: "/pricing",
-        languages: {
-            "en-US": "/en/pricing",
-            "tr-TR": "/tr/pricing",
-            "de-DE": "/de/pricing",
-        },
-    },
-    openGraph: {
-        title: "Fiyatlandırma | CheFood AI",
-        description: "Sana en uygun planı seç ve AI ile mutfakta devrim yarat.",
-        url: "https://chefoodai.vercel.app/pricing",
-        siteName: "CheFood AI",
-        images: [
-            {
-                url: "https://chefoodai.vercel.app/fotochef.webp",
-                width: 1200,
-                height: 630,
-                alt: "CheFood AI Fiyatlandırma",
-            },
-        ],
-        type: "website",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Fiyatlandırma | CheFood AI",
-        description: "Sana en uygun planı seç ve AI ile mutfakta devrim yarat.",
-        images: ["https://chefoodai.vercel.app/fotochef.webp"],
-    },
-};
+    path: "/pricing",
+    keywords: [
+        "chefood ai fiyatlandırma",
+        "yapay zeka yemek tarifleri abonelik",
+        "haftalık yemek planlayıcı",
+        "sınırsız tarif üretimi",
+        " premium yemek tarifleri",
+        "ai diyet asistanı fiyatları",
+        "chefood pro avantajları",
+        "yemek planlama ücretleri",
+        "ai şef üyeliği",
+    ],
+});
 
 const tiers = [
     { name: "Ücretsiz", price: "0" },

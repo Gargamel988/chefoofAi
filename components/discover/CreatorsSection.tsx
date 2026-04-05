@@ -26,7 +26,7 @@ function CreatorCard({ creator, index, userId }: { creator: Creator, index: numb
     return (
         <FadeUpCard index={index} className="snap-start shrink-0 w-36">
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 flex flex-col items-center text-center hover:border-orange-500/30 transition-colors">
-                <Link href={`/profile/${creator.id}`} className="relative mb-3 group/avatar">
+                <Link href={`/users/${creator.id}`} className="relative mb-3 group/avatar">
                     <div className="w-16 h-16 rounded-full p-0.5 bg-linear-to-br from-orange-500 to-amber-500 group-hover/avatar:scale-105 transition-transform">
                         <div className="w-full h-full rounded-full border-2 border-zinc-900 overflow-hidden bg-zinc-800">
                             {creator.img ? (

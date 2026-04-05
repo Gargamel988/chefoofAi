@@ -1,11 +1,22 @@
-import { Metadata } from 'next';
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: 'Gizlilik Politikası | CheFood AI',
   description: 'CheFood AI olarak verilerinizin güvenliğini önemsiyoruz. Gizlilik politikamızı buradan okuyabilirsiniz.',
-  robots: { index: true, follow: true },
-  alternates: { canonical: '/privacy-policy' },
-};
+  path: '/privacy-policy',
+  keywords: [
+    "chefood ai gizlilik politikası",
+    "veri güvenliği",
+    "çerez politikası",
+    "kişisel verilerin korunması",
+    "gizlilik sözleşmesi",
+    "ai yemek asistanı gizlilik",
+    "tarif platformu gizlilik",
+    "ödemeler ve güvenlik",
+    "veri koruma",
+    "gizlilik politikası",
+  ],
+});
 
 export default function PrivacyPolicy() {
   return (

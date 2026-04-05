@@ -8,36 +8,24 @@ import {
 } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { DiscoverSkeleton } from "@/components/discover/DiscoverSkeleton";
+import { buildPageMetadata } from "@/lib/seo";
 
-export const metadata = {
+export const metadata = buildPageMetadata({
     title: "En Popüler Tarifler ve Şefler | CheFood AI",
     description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
-    alternates: {
-        canonical: "/discover",
-    },
-    openGraph: {
-        title: "En Popüler Tarifler ve Şefler | CheFood AI",
-        description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
-        url: "https://chefoodai.com/discover",
-        siteName: "CheFood AI",
-        images: [
-            {
-                url: "https://chefoodai.com/fotochef.webp",
-                width: 1200,
-                height: 630,
-                alt: "CheFood AI - Yapay Zeka Yemek Tarifi Platformu",
-            },
-        ],
-        type: "website",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "En Popüler Tarifler ve Şefler | CheFood AI",
-        description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
-        images: ["https://chefoodai.com/fotochef.webp"],
-        creator: "@omerAIdev",
-    },
-};
+    path: "/discover",
+    keywords: [
+        "popüler yemek tarifleri",
+        "en iyi şefler",
+        "tarif keşfetme",
+        "yemek topluluğu",
+        "yeni lezzetler",
+        "şef koleksiyonları",
+        "trend yemekler",
+        "yapay zeka yemek asistanı",
+        "tarif paylaşımı",
+    ],
+});
 
 type User = {
     id: string;

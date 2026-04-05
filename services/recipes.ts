@@ -57,8 +57,8 @@ export const GetPublicRecipes = async (limit = 20) => {
   return { data: processedData, error: null };
 };
 
-export const GetRecipeBySlug = async (slug: string) => {
-  const supabase = await createClient();
+export const GetRecipeBySlug = async (slug: string, supabaseClient?: any) => {
+  const supabase = supabaseClient || (await createClient());
   const { data, error } = await supabase
     .from("recipes")
     .select(
@@ -305,4 +305,18 @@ export const DeleteRecipe = async (id: string) => {
     return { error };
   }
   return { error: null };
+};
+
+export const GetAllRecipeSlugs = async (supabaseClient?: any) => {
+  const supabase = supabaseClient || (await createClient());
+  const { data, error } = await supabase
+    .from("recipes")
+    .select("slug")
+    .eq("is_public", true);
+
+  if (error) {
+    console.error("Tüm slugları çekerken hata:", error);
+    return [];
+  }
+  return data || [];
 };

@@ -4,6 +4,37 @@ import { GetRecipesByUserId } from "@/services/recipes";
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import PublicProfileClient from "./PublicProfileClient";
+import { buildPageMetadata } from "@/lib/seo";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>;
+}) {
+    const slug = (await params).slug;
+    const { data: profile } = await GetProfileById(slug);
+
+    if (!profile) return {};
+
+    return buildPageMetadata({
+        title: `${profile.name} - Profil Sayfası`,
+        description: `${profile.name}'in paylaştığı tarifler ve profil bilgileri.`,
+        path: `/users/${slug}`,
+        image: profile.avatar_url
+            ? { url: profile.avatar_url, alt: profile.name }
+            : undefined,
+        keywords: [
+            profile.name,
+            "şef profili",
+            "yemek tarifleri",
+            "popüler tarifler",
+            "chefood ai şef",
+            "özel yemek koleksiyonu",
+            "mutfak asistanı",
+        ],
+        noIndex: true,
+    });
+}
 
 export default async function PublicProfilePage({
     params,

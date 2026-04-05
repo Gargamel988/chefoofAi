@@ -6,6 +6,25 @@ import {
     QueryClient,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata = buildPageMetadata({
+    title: "Haftalık Yemek Programım | CheFood AI",
+    description: "Kendi beslenme düzeninizi oluşturun, sevdiğiniz tarifleri haftalık plana ekleyin ve mutfak rutininizi kolayca yönetin.",
+    path: "/weekly-plan",
+    keywords: [
+        "haftalık yemek planı oluşturma",
+        "yemek programı",
+        "tarif organizatörü",
+        "kişisel yemek listesi",
+        "sağlıklı beslenme planı",
+        "mutfak ajandası",
+        "haftalık menü hazırlama",
+        "yemek tarifleri düzenleyici",
+        "chefood ai yemek planı",
+    ],
+    noIndex: true,
+});
 
 export default async function Page() {
     const queryClient = new QueryClient();
