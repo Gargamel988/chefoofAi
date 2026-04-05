@@ -11,27 +11,40 @@ export default function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
   const [hasConsented, setHasConsented] = useState<boolean | null>(null);
 
+  // Consent Mode Update Helper
+  const updateGoogleConsent = (granted: boolean) => {
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag('consent', 'update', {
+        'analytics_storage': granted ? 'granted' : 'denied',
+        'ad_storage': granted ? 'granted' : 'denied',
+        'ad_user_data': granted ? 'granted' : 'denied',
+        'ad_personalization': granted ? 'granted' : 'denied'
+      });
+    }
+  };
+
   useEffect(() => {
     const consent = localStorage.getItem("cookie-consent");
     if (consent === null) {
-      // 1 saniye gecikmeyle göster (daha premium hissettirir)
       const timer = setTimeout(() => setShowBanner(true), 1000);
       return () => clearTimeout(timer);
     } else {
-      setHasConsented(consent === "true");
+      const isGranted = consent === "true";
+      setHasConsented(isGranted);
+      if (isGranted) updateGoogleConsent(true);
     }
   }, []);
 
   const handleConsent = (agreed: boolean) => {
     localStorage.setItem("cookie-consent", agreed.toString());
     setHasConsented(agreed);
+    updateGoogleConsent(agreed);
     setShowBanner(false);
   };
 
   return (
     <>
-      {/* Google Analytics Sadece Onay Verildiyse Çalışır */}
-      {hasConsented === true && <GoogleAnalytics gaId={GA_TRACKING_ID} />}
+      {/* Google Analytics orjinal kodu artık layout.tsx içinde her zaman yüklü (Consent Mode v2) */}
 
       <AnimatePresence>
         {showBanner && (

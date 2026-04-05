@@ -14,6 +14,7 @@ import JsonLd from "@/components/JsonLd";
 import AdSenseScript from "@/components/adsense-script";
 import { rootMetadata } from "@/lib/seo";
 import CookieConsent from "@/components/CookieConsent";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 // Font optimizasyonu - sadece gerekli ağırlıklar
 const interFont = Inter({
@@ -81,7 +82,21 @@ export default async function RootLayout({
       <head>
         <JsonLd data={jsonLdApp} />
         <JsonLd data={jsonLdOrg} />
-
+        {/* Google Analytics - Always rendered for bot detection, denied by default for privacy */}
+        <Script id="google-consent" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              'analytics_storage': 'denied',
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied'
+            });
+          `}
+        </Script>
+        <GoogleAnalytics gaId="G-PP8ZMGR061" />
+        
         {/* AdSense Verification Script - Using standard script for crawler visibility */}
         <AdSenseScript />
       </head>
