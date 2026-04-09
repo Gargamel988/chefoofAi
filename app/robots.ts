@@ -1,6 +1,17 @@
 import { MetadataRoute } from "next";
 
 export default function Robots(): MetadataRoute.Robots {
+  const privateRoutes = [
+    "/api",
+    "/profile",
+    "/users",
+    "/onboarding",
+    "/publish",
+    "/checkout",
+    "/favorites",
+    "/weekly-plan",
+  ];
+
   return {
     host: "https://chefoodai.com",
     sitemap: "https://chefoodai.com/sitemap.xml",
@@ -8,26 +19,12 @@ export default function Robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: ["/"],
-        disallow: [
-          "/api/",
-          "/profile/",
-          "/users/",
-          "/onboarding/",
-          "/publish/",
-          "/checkout/",
-        ],
+        disallow: privateRoutes,
       },
       {
         userAgent: "Mediapartners-Google",
         allow: ["/"],
-        disallow: [
-          "/api/",
-          "/profile/",
-          "/users/",
-          "/onboarding/",
-          "/publish/",
-          "/checkout/",
-        ],
+        disallow: privateRoutes,
       },
     ],
   };

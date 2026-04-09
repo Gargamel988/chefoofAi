@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { streamObject } from "ai";
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createClient } from "@/lib/supabase/server";
 import { mealSchema } from "@/schema/meal-schema";
 import { buildMealPrompt } from "@/lib/prompts/meal-prompt";
@@ -13,6 +13,13 @@ import {
   deleteAllRecipes,
 } from "@/services/daily";
 import { checkFeatureAccess } from "@/lib/subscription";
+
+const googleProvider = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+  headers: {
+    "Referer": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  },
+});
 
 export async function GET(request: Request) {
   try {
@@ -76,6 +83,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json().catch(() => ({}));
+    console.log("POST Recommendations Body:", body);
     const action = body.action || "generate_all";
     const specificMealType = body.meal_type || "Kahvaltı";
     const oldMealId = body.old_meal_id;
@@ -99,8 +107,10 @@ export async function POST(request: Request) {
     const allergies = profile?.allergies?.join(", ") || "Yok";
     const today = new Date().toISOString().split("T")[0];
 
+    console.log("Generation Context:", { userId, diet, goal, allergies, action, specificMealType });
+
     const result = streamObject({
-      model: google("gemini-2.5-flash"),
+      model: googleProvider("gemini-2.5-flash"),
       schema: mealSchema,
       prompt: buildMealPrompt({
         diet,
@@ -110,7 +120,11 @@ export async function POST(request: Request) {
         specificMealType,
       }),
       onFinish: async ({ object }) => {
-        if (!object?.meals) return;
+        console.log("AI Generation Finished. Object structured:", !!object);
+        if (!object?.meals) {
+          console.warn("No meals found in generated object.");
+          return;
+        }
         try {
           // Eski kayıtları temizle
           if (action === "regenerate" && oldMealId) {
@@ -168,6 +182,8 @@ export async function POST(request: Request) {
               daily_suggestion_count: newCount,
             })
             .eq("id", userId);
+          
+          console.log("DB Update Success for user:", userId);
         } catch (err) {
           console.error("Recommendations DB error:", err);
         }

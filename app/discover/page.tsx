@@ -13,7 +13,7 @@ import { buildPageMetadata } from "@/lib/seo";
 export const metadata = buildPageMetadata({
     title: "En Popüler Tarifler ve Şefler | CheFood AI",
     description: "Topluluğun en sevilen tariflerini, şefleri ve koleksiyonları keşfet. Kendi tariflerini paylaş ve yeni lezzetler bul.",
-    path: "/discover",
+    path: "/",
     keywords: [
         "popüler yemek tarifleri",
         "en iyi şefler",

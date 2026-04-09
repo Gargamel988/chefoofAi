@@ -40,16 +40,14 @@ export async function proxy(request: NextRequest) {
   // 1. Define Public & Internal Routes (No Auth Required)
   const publicRoutes = [
     "/auth",
-    "/api/auth",
     "/recipe",
     "/discover",
-    "/kesfet",
-    "/users",
+    "/pricing",
+    "/whatever-cook",
     "/icon",
     "/robots.txt",
     "/sitemap.xml",
     "/ads.txt",
-    "/api/payments/paytr/callback",
     "/privacy-policy",
     "/terms-of-service",
   ];
@@ -59,14 +57,14 @@ export async function proxy(request: NextRequest) {
 
   // 2. Handle Alias & Guest Redirection
   if (pathname === "/kesfet") {
-    return NextResponse.redirect(new URL("/discover", request.url));
+    return NextResponse.redirect(new URL("/discover", request.url), { status: 301 });
   }
 
   if (!user) {
     if (pathname === "/") {
       const url = request.nextUrl.clone();
       url.pathname = "/discover";
-      return NextResponse.redirect(url);
+      return NextResponse.rewrite(url);
     }
     if (!isPublicPage) {
       const url = request.nextUrl.clone();

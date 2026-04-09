@@ -1,32 +1,38 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { translateSupabaseError } from "@/lib/errorTranslator";
+import { experimental_useObject as useObject } from "@ai-sdk/react";
+import { mealSchema } from "@/schema/meal-schema";
 
 import {
   GetRecommendations,
-  GenerateDailyRecommendations,
   UpdateRecommendationStatus,
 } from "@/services/recommendations";
 
 export function useRecommendations(date?: string) {
   const queryClient = useQueryClient();
 
-  const recommendationsQuery = useQuery({
-    queryKey: ["daily_recommendations", date],
-    queryFn: () => GetRecommendations(date).then((res) => res.data),
-  });
-
-  const generateMutation = useMutation({
-    mutationFn: (body: any) => GenerateDailyRecommendations(body),
-    onSuccess: () => {
+  // useObject for streaming generation
+  const {
+    object,
+    submit,
+    isLoading: isGenerating,
+    error: generationError,
+  } = useObject({
+    api: "/api/recommendations",
+    schema: mealSchema,
+    onFinish: () => {
+      console.log("Streaming finished, invalidating queries...");
       queryClient.invalidateQueries({ queryKey: ["daily_recommendations"] });
       queryClient.invalidateQueries({
         queryKey: ["daily_recommendations_nutrition"],
       });
     },
-    onError: (err: any) => {
-      toast.error(translateSupabaseError(err.message));
-    },
+  });
+
+  const recommendationsQuery = useQuery({
+    queryKey: ["daily_recommendations", date],
+    queryFn: () => GetRecommendations(date).then((res) => res.data),
   });
 
   const updateConsumptionMutation = useMutation({
@@ -52,7 +58,7 @@ export function useRecommendations(date?: string) {
 
       return { previous };
     },
-    onError: (err, _, context) => {
+    onError: (err: any, _, context) => {
       if (context?.previous) {
         queryClient.setQueryData(["daily_recommendations"], context.previous);
       }
@@ -68,7 +74,12 @@ export function useRecommendations(date?: string) {
 
   return {
     recommendations: recommendationsQuery.data,
-    generate: generateMutation,
+    generate: {
+      mutateAsync: (body: any) => submit(body),
+      isLoading: isGenerating,
+      error: generationError,
+    },
+    streamingObject: object, // Provide the streaming object to the UI
     updateConsumption: updateConsumptionMutation,
   };
 }

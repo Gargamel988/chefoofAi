@@ -15,7 +15,12 @@ const MEAL_ORDER: Record<string, number> = { "Kahvaltı": 1, "Öğle": 2, "Akşa
 const SKELETON_MEALS = ["Kahvaltı", "Öğle", "Akşam"] as const;
 
 export default function MealRecommendations() {
-    const { recommendations, generate, updateConsumption } = useRecommendations();
+    const { recommendations, generate, streamingObject, updateConsumption } = useRecommendations();
+    console.log("MealRecommendations State:", { 
+      hasRecs: !!recommendations?.length, 
+      isGenerating: generate.isLoading,
+      hasStream: !!streamingObject?.meals?.length 
+    });
     const { favorites, toggleFavorite } = useFavorite();
     const sub = useSubscription();
 
@@ -93,6 +98,24 @@ export default function MealRecommendations() {
     };
 
     const filledMeals = useMemo(() => {
+        const isGenerating = generate.isLoading;
+        
+        // If we are generating and have streaming data, use it for partial display
+        if (isGenerating && streamingObject?.meals && streamingObject.meals.length > 0) {
+            return streamingObject.meals.map((m: any) => ({
+                ...m,
+                recipes: m.nutrition_data ? {
+                    title: m.title,
+                    description: m.description,
+                    calories: m.nutrition_data.calories,
+                    protein: m.nutrition_data.protein,
+                    carbs: m.nutrition_data.carbs,
+                    fat: m.nutrition_data.fat,
+                } : null,
+                _is_streaming: true
+            }));
+        }
+
         if (isGenerating && !regenMealType) {
             return SKELETON_MEALS.map((type) => ({ meal_type: type, _skeleton: true }));
         }
@@ -103,7 +126,7 @@ export default function MealRecommendations() {
         }
 
         return sortedMeals;
-    }, [sortedMeals, isGenerating, regenMealType]);
+    }, [sortedMeals, generate.isLoading, streamingObject, regenMealType]);
 
     return (
         <section className="max-w-7xl mx-auto px-4 py-4 space-y-4">

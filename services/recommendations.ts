@@ -1,6 +1,5 @@
 "use server";
 import { createClient } from "@/lib/supabase/server";
-import { cookies } from "next/headers";
 
 export async function GetRecommendations(date?: string) {
   const supabase = await createClient();
@@ -61,42 +60,4 @@ export async function UpdateRecommendationStatus(
     .single();
 
   return { data, error };
-}
-
-export async function GenerateDailyRecommendations(body: any) {
-  // We call the API route to trigger the AI generation and DB saving
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const cookieStore = await cookies();
-  const cookieString = cookieStore
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
-
-  const response = await fetch(`${baseUrl}/api/recommendations`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieString,
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error("Recommendations generation failed:", errorText);
-    throw new Error(
-      `Generation failed: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  // We wait for the stream to complete to ensure data is saved by the API's onFinish
-  const reader = response.body?.getReader();
-  if (reader) {
-    while (true) {
-      const { done } = await reader.read();
-      if (done) break;
-    }
-  }
-
-  return { success: true };
 }
