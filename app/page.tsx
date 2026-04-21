@@ -11,7 +11,8 @@ import HistoryFavorites from "@/components/home/HistoryFavorites";
 import AdBanner from "@/components/AdBanner";
 
 import { ORANGE } from "@/components/home/constants";
-import { HydrationBoundary, dehydrate, QueryClient } from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { getMyProfile } from "@/services/profiles";
 import { GetDailyConsumedCalories } from "@/services/meals";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,7 +38,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function HomePage() {
-  const queryClient = new QueryClient();
+  const queryClient = createQueryClient();
 
   await Promise.all([
     queryClient.prefetchQuery({
@@ -85,6 +86,32 @@ export default async function HomePage() {
 
       {/* 6. HISTORY & FAVORITES */}
       <HistoryFavorites />
+
+      {/* 7. SEO RICH CONTENT - Provides value to search engines and AdSense bots */}
+      <div className="max-w-7xl mx-auto px-4 pt-16 pb-24 border-t border-zinc-900 mt-12">
+        <div className="prose prose-invert max-w-none">
+          <h2 className="text-2xl font-bold text-orange-500 mb-6 underline decoration-orange-500/30 underline-offset-8">
+            CheFood AI: Mutfaktaki Akıllı Asistanınız
+          </h2>
+          <p className="text-zinc-400 leading-relaxed mb-4">
+            CheFood AI, modern mutfakların en büyük yardımcısı olarak tasarlandı. Yapay zeka teknolojisini gastronomi dünyasıyla birleştirerek, evinizdeki malzemelerle neler pişirebileceğinizi saniyeler içinde size söyler. "Bugün ne pişirsem?" sorusuna son veren platformumuz, tamamen kişiselleştirilmiş bir yemek deneyimi sunar.
+          </p>
+          <div className="grid md:grid-cols-2 gap-8 text-sm">
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold">Neden CheFood AI Kullanmalısınız?</h3>
+              <p className="text-zinc-500">
+                Geleneksel tarif sitelerinin aksine, CheFood AI sizin elinizdeki malzemelere odaklanır. Buzdolabınızda kalan son üç malzemeyle bile gurme lezzetler yaratmanıza olanak tanır. Ayrıca besin analizi ve haftalık planlama özellikleri ile sağlıklı yaşam hedeflerinize ulaşmanızı kolaylaştırır.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-white font-semibold">Tasarruf ve Sürdürülebilirlik</h3>
+              <p className="text-zinc-500">
+                Gıda israfını önlemek bizim için bir misyondur. Elinizdeki malzemeleri en verimli şekilde kullanarak hem bütçenizi korur hem de çevreye katkıda bulunursunuz. Akıllı öneri sistemimiz, benzer malzemelerle yapılabilecek farklı tarifleri de sunarak mutfakta yaratıcılığınızı artırır.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
       {/* ══ MOBILE NAV ════════════════════════════════════ */}

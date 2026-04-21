@@ -3,8 +3,8 @@ import { getFavorites } from "@/services/favorite";
 import {
     dehydrate,
     HydrationBoundary,
-    QueryClient,
 } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { Suspense } from "react";
 import LoadingScreen from "../loading";
 import { buildPageMetadata } from "@/lib/seo";
@@ -17,7 +17,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function FavoritesPage() {
-    const queryClient = new QueryClient();
+    const queryClient = createQueryClient();
 
     // Prefetch favorites
     await queryClient.prefetchQuery({

@@ -41,10 +41,12 @@ export type WeeklyMeal = {
   day: string;
   meal_type: string;
   recipe_title: string;
+  slug?: string;
   description?: string;
   difficulty: string;
   ingredients: { name: string; amount: string; unit: string }[];
   steps: { description: string }[];
   nutrition: { cal: number; protein: number; carbs: number; fat: number };
   times: { prep: number; cook: number };
+  is_consumed?: boolean;
 };

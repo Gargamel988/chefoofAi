@@ -33,6 +33,7 @@ export function useWeeklyPlan(day: string) {
           day: day,
           meal_type: item.meal_type,
           recipe_title: recipe?.title,
+          slug: recipe?.slug,
           description: recipe?.description,
           difficulty: content?.difficulty,
           ingredients: content?.ingredients,

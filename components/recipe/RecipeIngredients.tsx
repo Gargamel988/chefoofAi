@@ -48,7 +48,7 @@ export function RecipeIngredients({ ingredients, servings }: RecipeIngredientsPr
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-orange-500 group-hover:shadow-[0_0_6px_rgba(255,107,44,0.9)] transition-shadow" />
                             <span className="text-zinc-300 text-sm font-medium group-hover:text-white transition-colors">
-                                {ing.name}
+                                {ing.name || (ing as any).item || (ing as any).text}
                             </span>
                             {ing.notes && <span className="text-[10px] text-zinc-600">({ing.notes})</span>}
                         </div>

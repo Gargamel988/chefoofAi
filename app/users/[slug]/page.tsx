@@ -39,9 +39,9 @@ export async function generateMetadata({
 export default async function PublicProfilePage({
     params,
 }: {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }) {
-    const username = params.slug;
+    const { slug: username } = await params;
 
     // Fetch the profile being viewed
     const { data: profile, error: profileError } = await GetProfileById(username);

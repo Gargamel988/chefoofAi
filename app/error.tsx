@@ -12,6 +12,10 @@ export default function Error({
 }) {
   useEffect(() => {
     console.error(error);
+    document.body.dataset.adsDisabled = "true";
+    return () => {
+      delete document.body.dataset.adsDisabled;
+    };
   }, [error]);
 
   return (

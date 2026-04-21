@@ -41,7 +41,18 @@ export async function generateMetadata({
 const AuthPage = async ({ searchParams }: { searchParams: Promise<{ mode?: string }> }) => {
     // Next.js 15+ searchParams Promise should be awaited in Server Components
     const resolvedParams = await searchParams;
-    const mode = resolvedParams?.mode;
+    const { mode, code } = resolvedParams as { mode?: string; code?: string };
+
+    // Rescue stuck OAuth users
+    if (code) {
+        let redirectPath = `/api/auth/callback?code=${code}`;
+        const next = (resolvedParams as any).next;
+        if (next) redirectPath += `&next=${next}`;
+        
+        const { redirect } = await import('next/navigation');
+        redirect(redirectPath);
+    }
+
     const isLogin = mode !== 'register';
 
     return (

@@ -43,7 +43,7 @@ export function MealCard({
                     <div className="flex justify-between items-start gap-4">
                         <div>
                             {meal.recipe_slug && !isUnsaved ? (
-                                <Link href={`/tarif/${meal.recipe_slug}`} className="hover:underline hover:text-orange-500 transition-colors">
+                                <Link href={`/recipe/${meal.recipe_slug}`} className="hover:underline hover:text-orange-500 transition-colors">
                                     <h3 className="text-xl font-black leading-tight sm:leading-snug mb-1">{meal.title}</h3>
                                 </Link>
                             ) : (

@@ -54,6 +54,7 @@ function useAuth() {
         SignInEmail(email, password),
       onSuccess: () => {
         toast.success("Giriş başarılı!");
+        router.push("/onboarding");
       },
       onError: (error) => {
         toast.error(translateSupabaseError(error.message));

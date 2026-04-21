@@ -59,11 +59,27 @@ export const GetProfileById = async (id: string) => {
 
 export const GetPopularProfiles = async (limit = 10) => {
   const supabase = await createClient();
+  
+  // We fetch counts by joining with recipes. 
+  // Since we can't easily order by subquery count in PostgREST .order(),
+  // we fetch a larger set and sort in JS, or just fetch all if it's a small pool.
   const { data, error } = await supabase
     .from("profiles")
-    .select("*")
-    .limit(limit);
-  return { data, error };
+    .select(`
+      *,
+      recipes:recipes(count)
+    `);
+
+  if (error) return { data: null, error };
+
+  // Sort by recipe count
+  const sortedData = (data || []).sort((a: any, b: any) => {
+    const aCount = a.recipes?.[0]?.count || 0;
+    const bCount = b.recipes?.[0]?.count || 0;
+    return bCount - aCount;
+  });
+
+  return { data: sortedData.slice(0, limit), error: null };
 };
 
 export const InsertProfile = async (data: Profile) => {

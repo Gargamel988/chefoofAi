@@ -25,7 +25,7 @@ export default function KesfetClient({ user }: { user: UserInfo | null }) {
 
     // TanStack Query Hooks with Suspense
     const { data: recipesData } = useRecipes(20);
-    const { data: creatorsData } = useCreators(10); // Check if useCreators exists or useProfiles
+    const { data: creatorsData } = useCreators(5); // Limited to 5 as requested
 
     const toggleCategory = (category: string) => {
         if (category === "Tümü") {

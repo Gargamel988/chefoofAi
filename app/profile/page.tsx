@@ -3,8 +3,8 @@ import { getMyProfile } from "@/services/profiles";
 import {
     dehydrate,
     HydrationBoundary,
-    QueryClient,
 } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { Suspense } from "react";
 import LoadingScreen from "@/app/loading";
 import { buildPageMetadata } from "@/lib/seo";
@@ -17,7 +17,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function ProfilePage() {
-    const queryClient = new QueryClient();
+    const queryClient = createQueryClient();
 
     // Prefetch user profile
     await queryClient.prefetchQuery({

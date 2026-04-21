@@ -75,7 +75,7 @@ export const GetRecipeBySlug = async (slug: string, supabaseClient?: any) => {
     `,
     )
     .eq("slug", slug)
-    .single();
+    .maybeSingle();
 
   if (data) {
     data.comments_count = data.recipe_comments?.length || 0;
@@ -184,7 +184,7 @@ export const GetRecipeById = async (id: string) => {
     `,
     )
     .eq("id", id)
-    .single();
+    .maybeSingle();
 
   if (data) {
     data.comments_count = data.recipe_comments?.length || 0;

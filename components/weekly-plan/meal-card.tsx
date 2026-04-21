@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Plus, Flame, Clock } from "lucide-react"
 import * as LucideIcons from "lucide-react"
+import Link from "next/link"
 
 interface MealCardProps {
     mealConfig: { type: string; iconName: string; color: string; bg: string; border: string };
@@ -30,7 +31,13 @@ export function MealCard({ mealConfig, mealData, onAddClick }: MealCardProps) {
                     <div className="space-y-2">
                         <h4 className={`text-[10px] font-black uppercase tracking-[0.2em] ${mealConfig.color}`}>{mealConfig.type}</h4>
                         <h3 className="text-xl font-bold text-zinc-200 group-hover:text-white leading-tight">
-                            {isPlanned ? mealData.recipe_title : `Harika bir ${mealConfig.type.toLowerCase()} planla.`}
+                            {isPlanned && mealData.slug ? (
+                                <Link href={`/recipe/${mealData.slug}`} className="hover:underline hover:text-orange-500 transition-colors">
+                                    {mealData.recipe_title}
+                                </Link>
+                            ) : (
+                                isPlanned ? mealData.recipe_title : `Harika bir ${mealConfig.type.toLowerCase()} planla.`
+                            )}
                         </h3>
                         {isPlanned && mealData.description && (
                             <p className="text-sm text-zinc-400 line-clamp-2">{mealData.description}</p>

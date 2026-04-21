@@ -8,7 +8,7 @@ interface Step {
     durationMinutes?: number;
 }
 
-export function RecipeSteps({ steps, startOffset = 0 }: { steps: Step[], startOffset?: number }) {
+export function RecipeSteps({ steps, startOffset = 0, showHeader = true }: { steps: Step[], startOffset?: number, showHeader?: boolean }) {
     if (!steps.length) return null;
 
     return (
@@ -18,11 +18,13 @@ export function RecipeSteps({ steps, startOffset = 0 }: { steps: Step[], startOf
             transition={{ duration: 0.5, delay: 0.1 }}
             className="bg-zinc-900 border border-zinc-800/60 rounded-3xl p-6 sm:p-8 shadow-xl"
         >
-            <h2 className="text-lg font-black text-white flex items-center gap-2 mb-8">
-                <ChefHat className="w-5 h-5 text-orange-400" />
-                Hazırlanış Adımları
-                <span className="ml-auto text-xs font-semibold text-zinc-500">{steps.length} adım</span>
-            </h2>
+            {showHeader && (
+                <h2 className="text-lg font-black text-white flex items-center gap-2 mb-8">
+                    <ChefHat className="w-5 h-5 text-orange-400" />
+                    Hazırlanış Adımları
+                    <span className="ml-auto text-xs font-semibold text-zinc-500">{steps.length} adım</span>
+                </h2>
+            )}
 
             <div className="space-y-5">
                 {steps.map((step, i) => (

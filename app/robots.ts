@@ -17,6 +17,10 @@ export default function Robots(): MetadataRoute.Robots {
     sitemap: "https://chefoodai.com/sitemap.xml",
     rules: [
       {
+        userAgent: "Googlebot",
+        allow: ["/"],
+      },
+      {
         userAgent: "*",
         allow: ["/"],
         disallow: privateRoutes,

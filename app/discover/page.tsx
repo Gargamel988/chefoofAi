@@ -4,8 +4,8 @@ import { GetPopularProfiles, getMyProfile } from "@/services/profiles";
 import {
     dehydrate,
     HydrationBoundary,
-    QueryClient,
 } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { Suspense } from "react";
 import { DiscoverSkeleton } from "@/components/discover/DiscoverSkeleton";
 import { buildPageMetadata } from "@/lib/seo";
@@ -34,7 +34,7 @@ type User = {
 };
 
 export default async function KesfetPage() {
-    const queryClient = new QueryClient();
+    const queryClient = createQueryClient();
     const profile = await getMyProfile();
 
     const userInfo: User | null = profile ? {

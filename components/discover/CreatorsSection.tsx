@@ -24,7 +24,7 @@ function CreatorCard({ creator, index, userId }: { creator: Creator, index: numb
     const following = isInteractionActive("follow");
 
     return (
-        <FadeUpCard index={index} className="snap-start shrink-0 w-36">
+        <FadeUpCard index={index}>
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 flex flex-col items-center text-center hover:border-orange-500/30 transition-colors">
                 <Link href={`/users/${creator.id}`} className="relative mb-3 group/avatar">
                     <div className="w-16 h-16 rounded-full p-0.5 bg-linear-to-br from-orange-500 to-amber-500 group-hover/avatar:scale-105 transition-transform">
@@ -75,7 +75,7 @@ export function CreatorsSection({ creators, userId }: CreatorsSectionProps) {
             <h3 className="text-sm font-black text-zinc-400 uppercase tracking-widest mb-4 flex items-center gap-2 px-4 sm:px-0">
                 <ChefHat className="w-4 h-4" /> Popüler Şefler
             </h3>
-            <div className="flex items-center gap-4 overflow-x-auto scrollbar-none pb-4 snap-x px-4 sm:px-0">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4 px-4 sm:px-0">
                 {creators.map((creator, i) => (
                     <CreatorCard key={creator.id} creator={creator} index={i} userId={userId} />
                 ))}

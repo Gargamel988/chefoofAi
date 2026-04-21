@@ -36,6 +36,8 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+  const userAgent = request.headers.get("user-agent") || "";
+  const isGoogleBot = userAgent.toLowerCase().includes("googlebot");
 
   // 1. Define Public & Internal Routes (No Auth Required)
   const publicRoutes = [
@@ -48,11 +50,15 @@ export async function proxy(request: NextRequest) {
     "/robots.txt",
     "/sitemap.xml",
     "/ads.txt",
+    "/manifest.webmanifest",
+    "/favicon.ico",
     "/privacy-policy",
     "/terms-of-service",
+    "/api/auth",
   ];
   const isPublicPage =
     pathname === "/" ||
+    isGoogleBot ||
     publicRoutes.some((route) => pathname.startsWith(route));
 
   // 2. Handle Alias & Guest Redirection
@@ -85,7 +91,13 @@ export async function proxy(request: NextRequest) {
       console.error("Middleware profile fetch error:", profileError);
     }
 
-    const allowedPathsForNonOnboarded = ["/onboarding", "/auth", "/api/auth"];
+    const allowedPathsForNonOnboarded = [
+      "/onboarding", 
+      "/auth", 
+      "/api/auth",
+      "/recipe",
+      "/discover"
+    ];
 
     const isAllowedPath = allowedPathsForNonOnboarded.some((path) =>
       request.nextUrl.pathname.startsWith(path),

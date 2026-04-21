@@ -3,8 +3,8 @@ import { fetchWeeklyPlan } from "@/services/weeklyPlan";
 import {
     dehydrate,
     HydrationBoundary,
-    QueryClient,
 } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { Suspense } from "react";
 import { buildPageMetadata } from "@/lib/seo";
 
@@ -27,7 +27,7 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function Page() {
-    const queryClient = new QueryClient();
+    const queryClient = createQueryClient();
 
     // Prefetch weekly plan data for the initial day (Pazartesi)
     await queryClient.prefetchQuery({

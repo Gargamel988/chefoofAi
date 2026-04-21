@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import AdDisableGuard from "@/components/AdDisableGuard";
 
 export const metadata: Metadata = {
   title: "Sayfa Bulunamadı | CheFood AI",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
+      <AdDisableGuard />
       <h1 className="text-4xl font-bold mb-4">404 - Sayfa Bulunamadı</h1>
       <p className="text-lg text-muted-foreground mb-8">
         Üzgünüz, aradığınız sayfaya ulaşılamıyor. Aşağıdaki popüler kategorilere göz atmak ister misiniz?

@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import {
     dehydrate,
     HydrationBoundary,
-    QueryClient,
 } from "@tanstack/react-query";
+import { createQueryClient } from "@/lib/query-client";
 import { Suspense } from "react";
 import LoadingScreen from "@/app/loading";
 import { Metadata } from "next";
@@ -13,6 +13,8 @@ import JsonLd from "@/components/JsonLd";
 import { createClient, createClientForStatic } from "@/lib/supabase/server";
 import { buildArticleMetadata } from "@/lib/seo";
 import { formatISO, parseISO } from "date-fns";
+
+export const dynamicParams = true;
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -23,8 +25,7 @@ export async function generateMetadata(
     { params }: Props
 ): Promise<Metadata> {
     const slug = (await params).slug;
-    const staticClient = await createClientForStatic();
-    const { data: recipe } = await GetRecipeBySlug(slug, staticClient);
+    const { data: recipe } = await GetRecipeBySlug(slug);
 
     if (!recipe) return {};
 
@@ -70,7 +71,7 @@ function generateRecipeJsonLd(recipe: any) {
         author: {
             "@type": "Person",
             name: recipe.profiles?.name || "CheFood AI",
-            url: `https://chefoodai.com/users/${recipe.slug}`,
+            url: recipe.profiles?.name ? `https://chefoodai.com/users/${recipe.profiles.name}` : "https://chefoodai.com",
         },
         publisher: {
             "@type": "Organization",
@@ -96,22 +97,25 @@ export default async function TarifPage({
     const resolvedParams = await params;
     const { slug } = resolvedParams;
 
-    const queryClient = new QueryClient();
-
-    const staticClient = await createClientForStatic();
+    const queryClient = createQueryClient();
 
     // Prefetch recipe
     const recipe = await queryClient.fetchQuery({
         queryKey: ["recipe", slug],
         queryFn: async () => {
-            const { data, error } = await GetRecipeBySlug(slug, staticClient);
+            const { data, error } = await GetRecipeBySlug(slug);
+            // .maybeSingle() returns data: null, error: null if not found.
+            // We only throw if there's a real database/technical error.
             if (error) throw error;
             return data;
         },
     }).catch(err => {
-        console.error("Recipe prefetch error:", err);
+        // Only log actual technical errors, not common 404s
+        console.error("Recipe prefetch technical error:", err);
         return null;
     });
+
+    console.log("recipe", recipe);
 
     if (!recipe) {
         notFound();
@@ -126,10 +130,24 @@ export default async function TarifPage({
         // Build time or no session
     }
 
-    // AI tariflerinde recipe_content alanı kullanılıyor, manuel olanlarda content.
+    // Sync normalization with TarifDetailClient to avoid hydration mismatch
+    const rawContent = recipe.recipe_content || recipe.content || {};
+    const content = typeof rawContent === "string" ? JSON.parse(rawContent) : rawContent;
+
+    // Minimal normalization for server-side
     const normalizedRecipe = {
         ...recipe,
-        content: recipe.recipe_content || recipe.content || {},
+        content: {
+            ...content,
+            steps: content.steps || (content as any).instructions || [],
+            ingredients: content.ingredients || [],
+            nutrition: content.nutrition || {
+                calories: recipe.calories || 0,
+                protein: recipe.protein || 0,
+                fat: recipe.fat || 0,
+                carbs: recipe.carbs || 0
+            }
+        }
     };
 
 
